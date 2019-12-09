@@ -43,7 +43,7 @@ import Painter from './components/Painter.vue'
 import Gallery from './components/Gallery.vue'
 import Auth from './components/Auth.vue'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const router = new VueRouter({
 	routes: [
@@ -52,7 +52,7 @@ const router = new VueRouter({
 		{ path: '/gallery', component: Gallery },
 		{ path: '/paint', component: Painter}
 	]
-})
+});
 
 export default {
   name: 'app',
