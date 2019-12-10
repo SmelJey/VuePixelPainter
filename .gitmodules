@@ -1,0 +1,3 @@
+[submodule "Backend-For-PixelPainter"]
+	path = Backend-For-PixelPainter
+	url = https://github.com/Unkorunk/Backend-For-PixelPainter.git
