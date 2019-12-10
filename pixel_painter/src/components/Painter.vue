@@ -1,9 +1,40 @@
 <template>
 	<div class="pixel-painter is-centered columns" id="pixel-painter">
+        <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
+            <div class="column is-multiline">
+                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, colorButtons)"
+                        v-on:click="btn.btnHandle(btn.color)"
+                        :key="indx"
+                        :style="{'background-color': btn.color}"></button>
+            </div>
+            <div class="column is-multiline">
+                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, colorButtons)"
+                        v-on:click="btn.btnHandle(btn.color)"
+                        :key="indx"
+                        :style="{'background-color': btn.color}"></button>
+            </div>
+        </div>
 		<canvas class="box" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
 				v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove">
-
 		</canvas>
+        <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
+            <div class="column is-multiline">
+                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, funcButton)"
+                        v-on:click="btn.btnHandle(btn.color)"
+                        :key="indx"
+                        :style="{'background-color': btn.color}">
+                    {{btn.text}}
+                </button>
+            </div>
+            <div class="column is-multiline">
+                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, funcButton)"
+                        v-on:click="btn.btnHandle(btn.color)"
+                        :key="indx"
+                        :style="{'background-color': btn.color}">
+                    {{btn.text}}
+                </button>
+            </div>
+        </div>
 	</div>
 </template>
 
@@ -16,19 +47,35 @@ export default {
 		return {
 			width: 16,
 			height: 16,
-			defaultColor: "transparent",
+			defaultColor: "white",
 			selectedColor: "black",
 			pixels: [],
-			buttons: [
-				{ btnType: "color", color: "black", active: false },
-				{ btnType: "color", color: "white", active: false },
-				{ btnType: "color", color: "blue", active: false },
-				{ btnType: "color", color: "red", active: false },
-				{ btnType: "color", color: "yellow", active: false },
-				{ btnType: "color", color: "green", active: false },
-				{ btnType: "eraser", color: "pink", active: false },
-				{ btnType: "clear", color: "pink", active: false }
+			colorButtons: [
+                { btnHandle: this.selectColor, color: "Red", active: false },
+                { btnHandle: this.selectColor, color: "FireBrick", active: false },
+				{ btnHandle: this.selectColor, color: "Green", active: false },
+				{ btnHandle: this.selectColor, color: "GreenYellow", active: false },
+				{ btnHandle: this.selectColor, color: "Orange", active: false },
+				{ btnHandle: this.selectColor, color: "DarkGoldenRod", active: false },
+				{ btnHandle: this.selectColor, color: "Yellow", active: false },
+                { btnHandle: this.selectColor, color: "Gold", active: false },
+                { btnHandle: this.selectColor, color: "DodgerBlue", active: false },
+                { btnHandle: this.selectColor, color: "Blue", active: false },
+                { btnHandle: this.selectColor, color: "DarkCyan", active: false },
+                { btnHandle: this.selectColor, color: "DarkTurquoise", active: false },
+                { btnHandle: this.selectColor, color: "Purple", active: false },
+                { btnHandle: this.selectColor, color: "Magenta", active: false },
+                { btnHandle: this.selectColor, color: "Grey", active: false },
+                { btnHandle: this.selectColor, color: "LightGrey", active: false },
+                { btnHandle: this.selectColor, color: "Black", active: false },
+                { btnHandle: this.selectColor, color: "White", active: false }
 			],
+            funcButton: [
+                { btnHandle: this.selectColor, color: "White", active: false, text:"Erase" },
+                { btnHandle: this.clear, color: "White", active: false, text:"Clear" },
+                { btnHandle: this.save, color: "White", active: false, text:"Save" },
+                { btnHandle: this.load, color: "White", active: false, text:"Load" }
+            ],
 			mouse: {
 				current: {
 					x: 0,
@@ -44,8 +91,8 @@ export default {
 	},
 	computed: {
 		currentMouse: function () {
-			var c = document.getElementById("canvas");
-			var rect = c.getBoundingClientRect();
+            let c = document.getElementById("canvas");
+            let rect = c.getBoundingClientRect();
 
 			return {
 				x: (this.mouse.current.x - rect.left - 20) / 30,
@@ -54,13 +101,35 @@ export default {
 		}
 	},
 	methods: {
+        getColumn: function(column, container){
+            return container.filter((item, indx) => (indx % 2) == column);
+        },
+        clear: function() {
+            let c = document.getElementById("canvas");
+            let ctx = c.getContext("2d");
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, 16, 16);
+            ctx.fillStyle = this.selectedColor
+        },
+        selectColor: function(color) {
+            let c = document.getElementById("canvas");
+            let ctx = c.getContext("2d");
+            this.selectedColor = color;
+            ctx.fillStyle = color;
+        },
+        save: function(){
+            let c = document.querySelector('canvas');
+            let data = { image: c.toDataURL(), data: Date.now() };
+            // let ctx = c.getContext("2d");
+            // let data = { image: ctx.getImageData(0, 0, 16, 16), data: Date.now() };
+            console.log(JSON.stringify(data));
+        },
 		draw: function () {
 			if (this.mouse.down ) {
-				var c = document.getElementById("canvas");
-				console.log(this.currentMouse.x, this.currentMouse.y);
+                let c = document.getElementById("canvas");
 
-				var ctx = c.getContext("2d");
-				ctx.fillStyle = "#FF0000";
+                let ctx = c.getContext("2d");
+				ctx.fillStyle = this.selectedColor;
 
 				ctx.fillRect(Math.trunc(this.currentMouse.x), Math.trunc(this.currentMouse.y), 1, 1);
 			}
@@ -73,8 +142,8 @@ export default {
 				y: event.pageY
 			};
 
-			var c = document.getElementById("canvas");
-			var ctx = c.getContext("2d");
+            let c = document.getElementById("canvas");
+            let ctx = c.getContext("2d");
 
 			ctx.moveTo(this.currentMouse.x, this.currentMouse.y);
 			this.draw(event)
