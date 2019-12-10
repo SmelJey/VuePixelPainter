@@ -5,12 +5,12 @@
 				<carousel :autoplay="true" :perPage="1" :paginationEnabled="true" :paginationPosition="'bottom-overlay'" :loop="true">
 					<slide>
 						<figure class="image is-640x640">
-							<img class="carousel_item" src='../assets/logo.png'>
+							<img class="carousel_item" src='../assets/main_logo.png'>
 						</figure>
 					</slide>
 					<slide>
 						<figure class="image is-640x640">
-							<img class="carousel_item" src='../assets/logo.png'>
+							<img class="carousel_item" src='../assets/main_logo.png'>
 						</figure>
 					</slide>
 				</carousel>
@@ -18,7 +18,7 @@
 			<div id="register" class="column">
 				<div class="field">
 					<figure class="image is-1980x1080">
-						<img src='../assets/logo.png'>
+						<img src='../assets/main_logo.png'>
 					</figure>
 				</div>
 				<div class="field">
