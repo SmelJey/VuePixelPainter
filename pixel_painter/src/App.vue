@@ -1,34 +1,5 @@
 <template>
   <div id="app">
-		<div class="level navbar">
-			<div class="level-item">
-				<div class="subtitle">
-					<router-link to="/">Home</router-link>
-				</div>
-			</div>
-			<div class="level-item">
-				<div class="subtitle">
-					<router-link to="gallery">Gallery</router-link>
-				</div>
-			</div>
-			<div class="level-item">
-				<router-link to="/" class="title">
-					<div class="title">
-						PixelPainter
-					</div>
-				</router-link>
-			</div>
-			<div class="level-item">
-				<div class="subtitle">
-					<router-link to="paint">Paint!</router-link>
-				</div>
-			</div>
-			<div class="level-item">
-				<div class="subtitle">
-					<router-link to="auth">Sigh in</router-link>
-				</div>
-			</div>
-		</div>
     <router-view></router-view>
   </div>
 </template>
@@ -36,7 +7,9 @@
 <script>
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueCarousel from 'vue-carousel'
 import "bulma/css/bulma.css"
+import "@fortawesome/fontawesome-free/css/all.css"
 
 import MainPage from './components/MainPage.vue'
 import Painter from './components/Painter.vue'
@@ -44,6 +17,7 @@ import Gallery from './components/Gallery.vue'
 import Auth from './components/Auth.vue'
 
 Vue.use(VueRouter)
+Vue.use(VueCarousel)
 
 const router = new VueRouter({
 	routes: [
@@ -67,6 +41,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: 100%;
+}
+html, body {
+	height: 100vh;
+	min-height: 100vh;
 }
 </style>
