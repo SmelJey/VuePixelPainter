@@ -25,7 +25,7 @@
 					<p class="control has-icons-left">
 						<input v-model="inputUsername" class="input is-rounded" type="text" placeholder="Username">
 						<span class="icon is-small is-left">
-							<i class="fas fa-user"></i>
+							<i class="fas fa-user"></i	>
 						</span>
 					</p>
 				</div>
@@ -37,8 +37,17 @@
 						</span>
 					</p>
 				</div>
-				<div class="field is-hidden">
-					
+				<div class="field">
+					<button v-on:click="login()" class="button is-fullwidth is-rounded">
+						Login
+					</button>
+
+					<button v-on:click="register()" class="button is-fullwidth is-rounded">
+						Register
+					</button>
+				</div>
+				<div id="errorMes" class="field is-hidden">
+					{{ ErrorMessage }}
 				</div>
 			</div>
 		</div>
@@ -46,27 +55,34 @@
 </template>
 
 <script>
-	import { Carousel, Slide } from 'vue-carousel';
-	import Vue from 'vue'
-
-	var auth = new Vue({
-	el: '#auth',
-	data: {
-			inputUsername: '',
-			inputPassword: '',
-			ErrorMessage: 'error'
-		},
-	})
-
-	export default {
+	import { Carousel, Slide } from 'vue-carousel'
+;	export default {
 		name: 'Auth',
 		Carousel,
 		Slide,
-		auth
+		data: function() {
+			return {
+				inputUsername: '',
+				inputPassword: '',
+				ErrorMessage: 'error'
+			}
+		},
+		methods: {
+			register: function() {
+
+			},
+			login: function() {
+
+				this.$router.push({name: 'Home'})
+			}
+		}
 	}
 </script>
 
 <style scoped>
+.button {
+	margin-top: 10px
+}
 .carousel_item{
 	min-height: 100vh;
 	max-height: 100vh;
