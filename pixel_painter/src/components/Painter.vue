@@ -1,41 +1,52 @@
 <template>
-	<div class="pixel-painter is-centered columns" id="pixel-painter">
-        <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
-            <div class="column is-multiline">
-                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, colorButtons)"
-                        v-on:click="btn.btnHandle(btn.color)"
-                        :key="indx"
-                        :style="{'background-color': btn.color}"></button>
+    <div class="main">
+        <nav>
+            <div class="content">
+                <img src="../assets/main_logo.png">
+                <div class="links">
+                    <a><img @click="goToRedactor()" src="../assets/icons/pen_icon.png"></a>
+                    <a><img @click="goToProfile()" src="../assets/icons/people_icon.png"></a>
+                </div>
             </div>
-            <div class="column is-multiline">
-                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, colorButtons)"
-                        v-on:click="btn.btnHandle(btn.color)"
-                        :key="indx"
-                        :style="{'background-color': btn.color}"></button>
+        </nav> 
+        <div class="pixel-painter is-centered columns" id="pixel-painter">
+            <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
+                <div class="column is-multiline">
+                    <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, colorButtons)"
+                            v-on:click="btn.btnHandle(btn.color)"
+                            :key="indx"
+                            :style="{'background-color': btn.color}"></button>
+                </div>
+                <div class="column is-multiline">
+                    <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, colorButtons)"
+                            v-on:click="btn.btnHandle(btn.color)"
+                            :key="indx"
+                            :style="{'background-color': btn.color}"></button>
+                </div>
+            </div>
+            <canvas class="box" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
+                    v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove">
+            </canvas>
+            <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
+                <div class="column is-multiline">
+                    <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, funcButton)"
+                            v-on:click="btn.btnHandle(btn.color)"
+                            :key="indx"
+                            :style="{'background-color': btn.color}">
+                        {{btn.text}}
+                    </button>
+                </div>
+                <div class="column is-multiline">
+                    <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, funcButton)"
+                            v-on:click="btn.btnHandle(btn.color)"
+                            :key="indx"
+                            :style="{'background-color': btn.color}">
+                        {{btn.text}}
+                    </button>
+                </div>
             </div>
         </div>
-		<canvas class="box" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
-				v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove">
-		</canvas>
-        <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
-            <div class="column is-multiline">
-                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, funcButton)"
-                        v-on:click="btn.btnHandle(btn.color)"
-                        :key="indx"
-                        :style="{'background-color': btn.color}">
-                    {{btn.text}}
-                </button>
-            </div>
-            <div class="column is-multiline">
-                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, funcButton)"
-                        v-on:click="btn.btnHandle(btn.color)"
-                        :key="indx"
-                        :style="{'background-color': btn.color}">
-                    {{btn.text}}
-                </button>
-            </div>
-        </div>
-	</div>
+    </div>
 </template>
 
 <script>
@@ -101,6 +112,12 @@ export default {
 		}
 	},
 	methods: {
+        goToProfile () {
+            this.$router.push({name: 'Profile'})
+        },
+        goToRedactor () {
+            this.$router.push({name: 'Painter'})
+        },
         getColumn: function(column, container){
             return container.filter((item, indx) => (indx % 2) == column);
         },
@@ -170,11 +187,13 @@ export default {
 
 <style>
 	canvas {
+        margin-top: 13px;
 		width: 512px;
 		height: 512px;
 		image-rendering: -moz-crisp-edges;
 		image-rendering: -webkit-crisp-edges;
 		image-rendering: pixelated;
 		image-rendering: crisp-edges;
-	}
+    }
+    @import '../css/Nuvbar.css';
 </style>

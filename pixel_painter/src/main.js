@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import Vuex from 'vuex'
+import Meta from 'vue-meta'
 import VueRouter from 'vue-router'
 import VueCarousel from 'vue-carousel'
 
@@ -16,6 +17,7 @@ import './../node_modules/bulma/css/bulma.css'
 Vue.use(VueCarousel);
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(Meta)
 
 const store = () => new Vuex.Store({
   
