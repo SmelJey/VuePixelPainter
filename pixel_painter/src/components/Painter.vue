@@ -128,6 +128,12 @@
             }
         },
         methods: {
+            goToProfile () {
+                this.$router.push({name: 'Profile'})
+            },
+            goToRedactor () {
+                this.$router.push({name: 'Painter'})
+            },
             getColumn: function(column, container){
                 return container.filter((item, indx) => (indx % 2) == column);
             },
