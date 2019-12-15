@@ -1,5 +1,48 @@
 <template>
-	<div id="auth">
+	<div>
+		<div v-if="showModal" class="modal is-active">
+			<div v-on:click="closeModal()" class="modal-background"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title"></p>
+					<button v-on:click="closeModal()" class="delete" aria-label="close"></button>
+				</header>
+				<section class="modal-card-body">
+					<div class="field">
+						<p class="control has-icons-left">
+							<input v-model="inputEmail" class="input is-rounded" type="text" placeholder="Email">
+							<span class="icon is-small is-left">
+								<i class="fas fa-at"></i>
+							</span>
+						</p>
+					</div>
+					<div class="field">
+						<p class="control has-icons-left">
+							<input v-model="inputUsername" class="input is-rounded" type="text" placeholder="Username">
+							<span class="icon is-small is-left">
+								<i class="fas fa-user"></i>
+							</span>
+						</p>
+					</div>
+					<div class="field">
+						<p class="control has-icons-left">
+							<input v-model="inputPassword" class="input is-rounded" type="password" placeholder="Password">
+							<span class="icon is-small is-left">
+								<i class="fas fa-lock"></i>
+							</span>
+						</p>
+					</div>
+					<p v-if="haveError && showModal" class="help is-danger">{{ errorMessage }}</p>
+					</section>
+					<footer class="modal-card-foot">
+						<button v-on:click="register()" class="button is-fullwidth is-rounded">
+							Register
+						</button>
+						
+					</footer>
+			</div>
+		</div>
+
 		<div class="columns">
 			<div class="column is-two-thirds is-hidden-mobile is-widescreen">
 				<carousel :autoplay="true" :perPage="1" :paginationEnabled="true" :paginationPosition="'bottom-overlay'" :loop="true">
@@ -25,7 +68,7 @@
 					<p class="control has-icons-left">
 						<input v-model="inputUsername" class="input is-rounded" type="text" placeholder="Username">
 						<span class="icon is-small is-left">
-							<i class="fas fa-user"></i	>
+							<i class="fas fa-user"></i>
 						</span>
 					</p>
 				</div>
@@ -42,12 +85,12 @@
 						Login
 					</button>
 
-					<button v-on:click="register()" class="button is-fullwidth is-rounded">
+					<button v-on:click="openModal()" class="button is-fullwidth is-rounded">
 						Register
 					</button>
 				</div>
-				<div id="errorMes" class="field is-hidden">
-					{{ ErrorMessage }}
+				<div v-if="haveError && !showModal" class="field">
+					<p id="errorLoginMessage" class="help is-danger">{{ errorMessage }}</p>
 				</div>
 			</div>
 		</div>
@@ -56,25 +99,58 @@
 
 <script>
 	import { Carousel, Slide } from 'vue-carousel'
-;	export default {
+	export default {
 		name: 'Auth',
 		Carousel,
 		Slide,
 		data: function() {
 			return {
+				inputEmail: '',
 				inputUsername: '',
 				inputPassword: '',
-				ErrorMessage: 'error'
+				errorMessage: '',
+				showModal: false,
+				haveError: false
 			}
 		},
 		methods: {
+			openModal: function() {
+				this.showModal = true;
+				this.haveError = false;
+			},
+			closeModal: function() {
+				this.showModal = false;
+				this.haveError = false;
+			},
 			register: function() {
-
+				if (this.inputUsername == '') {
+					this.errorMessage = 'Input username'
+					this.haveError = true
+				} else if (this.inputEmail == '') {
+					this.errorMessage = 'Input email'
+					this.haveError = true
+				} else if (this.inputPassword.length < 6) {
+					this.errorMessage = 'Password length must be more that 6 symbols'
+					this.haveError = true
+				} else {
+					this.haveError = false
+					//todo backend work
+					this.$router.push({name: 'Home'})
+				}
 			},
 			login: function() {
-
-				this.$router.push({name: 'Home'})
-			}
+				if (this.inputUsername == '') {
+					this.errorMessage = 'Input username'
+					this.haveError = true
+				} else if (this.inputPassword.length < 6) {
+					this.errorMessage = 'Password length must be more that 6 symbols'
+					this.haveError = true
+				} else {
+					this.haveError = false
+					//todo backend work
+					this.$router.push({name: 'Home'})
+				}
+			},
 		}
 	}
 </script>
