@@ -98,6 +98,16 @@
 </template>
 
 <script>
+	import Axios from 'axios'
+	const axios = Axios.create({
+		baseURL: 'http://localhost:8080/account',
+		timeout: 1000,
+		headers: {
+			'Access-Control-Allow-Origin': 'http://localhost:8080/',
+			'allow_origins' : 'http://localhost:8080/'
+		}
+	})
+
 	import { Carousel, Slide } from 'vue-carousel'
 	export default {
 		name: 'Auth',
@@ -123,32 +133,66 @@
 				this.haveError = false;
 			},
 			register: function() {
-				if (this.inputUsername == '') {
-					this.errorMessage = 'Input username'
-					this.haveError = true
-				} else if (this.inputEmail == '') {
-					this.errorMessage = 'Input email'
-					this.haveError = true
+				if (this.inputUsername === '') {
+					this.errorMessage = 'Input username';
+					this.haveError = true;
+				} else if (this.inputEmail === '') {
+					this.errorMessage = 'Input email';
+					this.haveError = true;
 				} else if (this.inputPassword.length < 6) {
-					this.errorMessage = 'Password length must be more that 6 symbols'
-					this.haveError = true
+					this.errorMessage = 'Password length must be more that 6 symbols';
+					this.haveError = true;
 				} else {
-					this.haveError = false
-					//todo backend work
-					this.$router.push({name: 'Home'})
+					this.haveError = false;
+					axios.post('/register?login=' + this.inputUsername
+							+ '&password=' + this.inputPassword
+							+ '&email=' + this.inputEmail)
+							.then((response) => {
+								if (response.data["status"] === "OK"){
+									this.$store.commit('setToken', response.data['token']);
+									this.showModal = false;
+								} else {
+									this.haveError = true;
+									this.errorMessage = 'Choose another login';
+								}
+
+								console.log(response.data);
+							})
+							.catch((error) => {
+								this.haveError = true;
+								this.errorMessage = 'Something odd happened';
+								console.log(error);
+							});
 				}
 			},
 			login: function() {
-				if (this.inputUsername == '') {
-					this.errorMessage = 'Input username'
-					this.haveError = true
+				if (this.inputUsername === '') {
+					this.errorMessage = 'Input username';
+					this.haveError = true;
 				} else if (this.inputPassword.length < 6) {
-					this.errorMessage = 'Password length must be more that 6 symbols'
-					this.haveError = true
+					this.errorMessage = 'Password length must be more that 6 symbols';
+					this.haveError = true;
 				} else {
-					this.haveError = false
-					//todo backend work
-					this.$router.push({name: 'Home'})
+					this.haveError = false;
+
+					axios.post('/login?login=' + this.inputUsername
+							+ '&password=' + this.inputPassword)
+						.then((response) => {
+							if (response.data["status"] === "OK"){
+								this.$store.commit('setToken', response.data['token']);
+								this.$router.push({name: 'Home'});
+							} else {
+								this.haveError = true;
+								this.errorMessage = 'Incorrect login or password';
+							}
+
+							console.log(response.data);
+						})
+						.catch((error) => {
+							this.haveError = true;
+							this.errorMessage = 'Something odd happened';
+							console.log(error);
+						});
 				}
 			},
 		}
