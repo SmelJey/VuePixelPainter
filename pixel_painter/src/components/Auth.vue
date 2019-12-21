@@ -99,6 +99,14 @@
 
 <script>
 	import Axios from 'axios'
+	const axios = Axios.create({
+		baseURL: 'http://localhost:8080/account',
+		timeout: 1000,
+		headers: {
+			'Access-Control-Allow-Origin': 'http://localhost:8080/',
+			'allow_origins' : 'http://localhost:8080/'
+		}
+	})
 
 	import { Carousel, Slide } from 'vue-carousel'
 	export default {
@@ -136,25 +144,25 @@
 					this.haveError = true;
 				} else {
 					this.haveError = false;
-
-					Axios.post('http://10.0.84.71:8080/account/register?login=' + this.inputUsername
+					axios.post('/register?login=' + this.inputUsername
 							+ '&password=' + this.inputPassword
 							+ '&email=' + this.inputEmail)
-						.then((response) => {
-							if (response.data["status"] === "OK")
-								this.$router.push({name: 'Home'});
-							else {
-								this.haveError = true;
-								this.errorMessage = 'Choose another login';
-							}
+							.then((response) => {
+								if (response.data["status"] === "OK"){
+									this.$store.commit('setToken', response.data['token']);
+									this.showModal = false;
+								} else {
+									this.haveError = true;
+									this.errorMessage = 'Choose another login';
+								}
 
-							console.log(response.data);
-						})
-						.catch((error) => {
-							this.haveError = true;
-							this.errorMessage = 'Something odd happened';
-							console.log(error);
-						});
+								console.log(response.data);
+							})
+							.catch((error) => {
+								this.haveError = true;
+								this.errorMessage = 'Something odd happened';
+								console.log(error);
+							});
 				}
 			},
 			login: function() {
@@ -167,13 +175,13 @@
 				} else {
 					this.haveError = false;
 
-					Axios.post('http://10.0.84.71:8080/account/login?login=' + this.inputUsername
+					axios.post('/login?login=' + this.inputUsername
 							+ '&password=' + this.inputPassword)
 						.then((response) => {
-							if (response.data["status"] === "OK")
+							if (response.data["status"] === "OK"){
+								this.$store.commit('setToken', response.data['token']);
 								this.$router.push({name: 'Home'});
-								//TODO Process token
-							else {
+							} else {
 								this.haveError = true;
 								this.errorMessage = 'Incorrect login or password';
 							}

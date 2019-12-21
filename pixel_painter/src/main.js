@@ -18,7 +18,19 @@ Vue.use(VueRouter);
 Vue.use(Vuex);
 
 const store = () => new Vuex.Store({
-  
+  state: {
+    token: ''
+  },
+  getters: {
+    getToken: state => {
+      return state.token
+    }
+  },
+  mutations: {
+    setToken (state, token) {
+      state.token = token
+    }
+  }
 });
 
 const router = new VueRouter({
