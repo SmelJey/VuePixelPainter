@@ -55,9 +55,15 @@
 </template>
 
 <script>
-    //import Axios from 'axios'
-    const Axios = require('axios');
-    //import SaverModal from "./SaverModal";
+    import Axios from 'axios'
+    const axios = Axios.create({
+        baseURL: 'http://localhost:8080/gallery',
+        timeout: 1000,
+        headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:8080/',
+            'allow_origins' : 'http://localhost:8080/'
+        }
+    });
 
     export default {
         name: 'Painter',
@@ -167,10 +173,19 @@
                     }).catch(error => console.error(error));
             },
             publish: function() {
-                let c = document.getElementById('canvas');
-                let data = { image: c.toDataURL(), date: Date.now() };
 
-                console.log(JSON.stringify(data));
+                let c = document.getElementById('canvas');
+                //let data = { image: c.toDataURL(), date: Date.now() };
+
+                axios.post('/create?data=' + c.toDataURL()
+                    + '&is_private=false'
+                    + '&token=' + this.$store.getters.getToken)
+                    .then((response) => {
+                        console.log(response.data)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
             },
             loadFromLink : function() {
                 testImage(this.loadFromURL, (url, res) => {

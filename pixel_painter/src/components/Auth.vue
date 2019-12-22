@@ -106,7 +106,7 @@
 			'Access-Control-Allow-Origin': 'http://localhost:8080/',
 			'allow_origins' : 'http://localhost:8080/'
 		}
-	})
+	});
 
 	import { Carousel, Slide } from 'vue-carousel'
 	export default {
@@ -218,6 +218,6 @@
 }
 #register{
 	margin-top: 10px;
-	max-height: 100vh - 10px;
+	max-height: 100vh;
 }
 </style>
