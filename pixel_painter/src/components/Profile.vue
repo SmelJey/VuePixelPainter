@@ -1,6 +1,7 @@
 <template>
 	<div class="main">
 		<Navbar/>
+		<div class="shadow"></div>
 		<section class="section">
 			<div class="media">
 				<div class="media-left">
@@ -36,8 +37,7 @@ export default {
         return {
             accountPic: 'https://bulma.io/images/placeholders/128x128.png',
             accountName: 'John Smith',
-            accountMeta: '@ggwp',
-            numberOfPic: 4
+            accountMeta: '@ggwp'
         }
     },
     computed: {
@@ -54,19 +54,24 @@ export default {
     },
     methods: {
         drawImageOnCanvas () {
-			console.log('test')
 			for (var i = 0; i < this.getImages.length; ++i) {
 				let item = this.getImages[i]
-				var canvas = document.getElementById(item.id).getContext('2d')
-				var image = new Image(16, 16)
-				image.src = item.url
-				canvas.drawImage(image, 0, 0)
+				var canvas = document.getElementById(item.id)
+				if (canvas != null) {
+					var ctx = canvas.getContext('2d');
+					var image = new Image(16, 16)
+					image.src = item.url
+					ctx.drawImage(image, 0, 0)
+					console.log(item)
+					console.log(image)
+				}
 			}
         }
-    },
+	},
     mounted() {
-		this.drawImageOnCanvas();
-    }
+		this.$nextTick(this.drawImageOnCanvas());
+		console.log(2);
+	}
 
 }
 </script>
@@ -83,5 +88,8 @@ canvas {
 	height: 200px; 
 	width: 200px;
 	border: 10px solid;
+}
+.shadow {
+	height: 25px;
 }
 </style>

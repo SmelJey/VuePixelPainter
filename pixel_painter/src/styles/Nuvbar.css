@@ -1,7 +1,9 @@
 nav {
     display: grid;
     grid-template-rows: minmax(min-content, 70px) min-content;
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.45);
 }
+
 nav .content {
     display: grid;
     background-color: #fe6e4b;
@@ -9,14 +11,17 @@ nav .content {
     grid-auto-flow: column;
     align-content: space-evenly;
 }
+
 nav .content img {
     object-fit: contain;
     width: 21vw;
     height: 3vh;
 }
+
 nav .content .links img {
     height: 4vh;
 }
+
 nav .content .links {
     display: grid;
     grid-gap: 15px;
@@ -28,7 +33,9 @@ nav .content .links {
     nav {
         display: grid;
         grid-template-rows: minmax(min-content, 65px) min-content;
+        box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.45);
     }
+
     nav .content {
         background-color: #fe6e4b;
         display: grid;
@@ -36,15 +43,18 @@ nav .content .links {
         grid-auto-flow: column;
         align-content: space-evenly;
     }
+
     nav .content img {
         object-fit: contain;
         width: 65vw;
         height: 3vh;
     }
+
     nav .content .links img {
         object-fit: contain;
         height: 5vh;
     }
+    
     nav .content .links {
         display: grid;
         grid-gap: 15px;
