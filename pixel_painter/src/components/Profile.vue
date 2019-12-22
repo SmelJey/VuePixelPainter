@@ -1,16 +1,6 @@
 <template>
-	<div>
-		<div class="main">
-			<nav>
-				<div class="content">
-					<img src="../assets/main_logo.png">
-					<div class="links">
-						<a><img @click="goToRedactor()" src="../assets/icons/pen_icon.png"></a>
-						<a><img @click="goToProfile()" src="../assets/icons/people_icon.png"></a>
-					</div>
-				</div>
-			</nav>
-		</div>
+	<div class="main">
+		<Navbar/>
 		<section class="section">
 			<div class="media">
 				<div class="media-left">
@@ -36,8 +26,12 @@
 </template>
 
 <script>
+import Navbar from './Navbar.vue'
 export default {
-    name: 'Profile',
+	name: 'Profile',
+	components: {
+		Navbar
+	},
     data: function(){
         return {
             accountPic: 'https://bulma.io/images/placeholders/128x128.png',
@@ -50,7 +44,7 @@ export default {
         getImages() {
             //todo backend task
             return [{id: 0, url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAa0lEQVQ4T62TQQ4AIQgD4f+PZsPBsDatxCBHhbFAdRuGD+vtNSDCzAGaZxiVQ5LzchUhLEH7I+I1VrhUtICuOEFtC2w3vC0xgxFgl1gotiFDH6jpq1VGECOxZFRVOQcn/kF6M6+tfP+1xgo+WtAqDbTLNqoAAAAASUVORK5CYII='},
-                    {id: 1, url: 'https://bulma.io/images/placeholders/96x96.png'},
+                    {id: 1, url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAh0lEQVQ4T61QQQ6AMAhjX/HmW4xvcr7J+Jbd/IqmJJ1siQeGXICVdoV0F7klEAkC+5xVYitZWPc9MWQE5lBXgR7gALMl2Q/dAtZZ4yC0QuCG7w1GROoKI2Ry9IhhgWOZVGM9L2Hd98SQEZhDrQ7YWIBvXxg/cAtYZ42D0Aq/HdErVFfwEu38Awoqt2EXKMQzAAAAAElFTkSuQmCC'},
                     {id: 2, url: 'https://bulma.io/images/placeholders/96x96.png'},
                     {id: 3, url: 'https://bulma.io/images/placeholders/96x96.png'},
                     {id: 4, url: 'https://bulma.io/images/placeholders/96x96.png'},
@@ -59,15 +53,6 @@ export default {
         }
     },
     methods: {
-        goToProfile () {
-            this.$router.push({name: 'Profile'})
-        },
-        goToRedactor () {
-            this.$router.push({name: 'Painter'})
-        },
-        goToHome () {
-            this.$router.push({name: 'Home'})
-        },
         drawImageOnCanvas () {
 			console.log('test')
 			for (var i = 0; i < this.getImages.length; ++i) {
@@ -87,14 +72,16 @@ export default {
 </script>
 
 <style scoped>
-  .title {
+@import '../styles/Main.css';
+.title {
   margin-top: 10px;
-  }
-  canvas {
+}
+.section {
+	background-color: #f7efed;
+}
+canvas {
 	height: 200px; 
 	width: 200px;
 	border: 10px solid;
-  }
-
-  @import '../css/Nuvbar.css';
+}
 </style>
