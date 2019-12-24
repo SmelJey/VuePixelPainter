@@ -1,28 +1,58 @@
 <template>
     <div class="main">
-        <nav>
-            <div class="content">
-                <img src="../assets/main_logo.png">
-                <div class="links">
-                    <a><img @click="goToRedactor()" src="../assets/icons/pen_icon.png"></a>
-                    <a><img @click="goToProfile()" src="../assets/icons/people_icon.png"></a>
-                </div>
-            </div>
-        </nav> 
+        <Navbar/> 
         <div class="pixel-painter is-centered columns" id="pixel-painter">
-            <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
-                <div class="column is-multiline">
-                    <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, colorButtons)"
-                            v-on:click="btn.btnHandle(btn.color)"
-                            :key="indx"
-                            :style="{'background-color': btn.color}"></button>
-                </div>
-                <div class="column is-multiline">
-                    <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, colorButtons)"
-                            v-on:click="btn.btnHandle(btn.color)"
-                            :key="indx"
-                            :style="{'background-color': btn.color}"></button>
-                </div>
+        <div class="modal is-active" v-if="showSaver">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Save image</p>
+                    <button class="delete" aria-label="close" v-on:click="showSaver = false"></button>
+                </header>
+                <section class="modal-card-body">
+                    <span>You can use this link for loading in this app</span>
+                    <div class="textarea" rows="3" style="word-wrap: break-word;">{{saveLink}}</div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" v-on:click="save">Or download to computer</button>
+                </footer>
+            </div>
+        </div>
+
+        <div class="modal is-active" v-if="showLoader">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Load image</p>
+                    <button class="delete" aria-label="close" v-on:click="showLoader = false"></button>
+                </header>
+                <section class="modal-card-body">
+                    <span>Input your link</span>
+                    <div class="notification" v-if="linkErr">
+                        <button class="delete"></button>
+                        Please input correct link
+                    </div>
+                    <label>
+                        <input class="input" type="text" v-model="loadFromURL">
+                    </label>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" v-on:click="loadFromLink">Load image</button>
+                </footer>
+            </div>
+        </div>
+        <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
+            <div class="column is-multiline">
+                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, colorButtons)"
+                        v-on:click="btn.btnHandle(btn.color)"
+                        :key="indx"
+                        :style="{'background-color': btn.color}"></button>
+            </div>
+            <div class="column is-multiline">
+                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, colorButtons)"
+                        v-on:click="btn.btnHandle(btn.color)"
+                        :key="indx"
+                        :style="{'background-color': btn.color}"></button>
             </div>
         </div>
 		<canvas class="box" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
@@ -52,15 +82,26 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
-    //import Axios from 'axios'
-    const Axios = require('axios');
-    //import SaverModal from "./SaverModal";
+    import Navbar from './Navbar.vue'
+    import Axios from 'axios'
+    const axios = Axios.create({
+        baseURL: 'http://localhost:8080/gallery',
+        timeout: 1000,
+        headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:8080/',
+            'allow_origins' : 'http://localhost:8080/'
+        }
+    });
 
     export default {
         name: 'Painter',
+        components: {
+            Navbar
+        },
         data : function() {
             return {
                 width: 16,
@@ -167,10 +208,22 @@
                     }).catch(error => console.error(error));
             },
             publish: function() {
-                let c = document.getElementById('canvas');
-                let data = { image: c.toDataURL(), date: Date.now() };
 
-                console.log(JSON.stringify(data));
+                let c = document.getElementById('canvas');
+                //let data = { image: c.toDataURL(), date: Date.now() };
+                console.log(this.$cookies.get('token'));
+                axios.post('/create?data=' + c.toDataURL()
+                    + '&is_private=false'
+                    + '&token=' + this.$cookies.get('token'))
+                    .then((response) => {
+                        console.log(response.data)
+                        if (response.data['status'] === 'INVALID_TOKEN'){
+                            this.$router.push('auth');
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
             },
             loadFromLink : function() {
                 testImage(this.loadFromURL, (url, res) => {
@@ -252,6 +305,7 @@
 </script>
 
 <style>
+@import '../styles/Main.css';
 	canvas {
         margin-top: 13px;
 		width: 512px;
@@ -261,5 +315,4 @@
 		image-rendering: pixelated;
 		image-rendering: crisp-edges;
     }
-    @import '../css/Nuvbar.css';
 </style>

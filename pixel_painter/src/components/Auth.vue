@@ -106,7 +106,7 @@
 			'Access-Control-Allow-Origin': 'http://localhost:8080/',
 			'allow_origins' : 'http://localhost:8080/'
 		}
-	})
+	});
 
 	import { Carousel, Slide } from 'vue-carousel'
 	export default {
@@ -180,7 +180,7 @@
 							+ '&password=' + this.inputPassword)
 						.then((response) => {
 							if (response.data["status"] === "OK"){
-								this.$store.commit('setToken', response.data['token']);
+								this.$cookies.set('token', response.data['token'], 3600);
 								this.$router.push({name: 'Home'});
 							} else {
 								this.haveError = true;
@@ -219,6 +219,6 @@
 }
 #register{
 	margin-top: 10px;
-	max-height: 100vh - 10px;
+	max-height: 100vh;
 }
 </style>

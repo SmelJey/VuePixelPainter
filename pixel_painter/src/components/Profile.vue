@@ -1,16 +1,7 @@
 <template>
-	<div>
-		<div class="main">
-			<nav>
-				<div class="content">
-					<img src="../assets/main_logo.png">
-					<div class="links">
-						<a><img @click="goToRedactor()" src="../assets/icons/pen_icon.png"></a>
-						<a><img @click="goToProfile()" src="../assets/icons/people_icon.png"></a>
-					</div>
-				</div>
-			</nav>
-		</div>
+	<div class="main">
+		<Navbar/>
+		<div class="shadow"></div>
 		<section class="section">
 			<div class="media">
 				<div class="media-left">
@@ -48,8 +39,12 @@
 		}
 	})
 
+import Navbar from './Navbar.vue'
 export default {
-    name: 'Profile',
+	name: 'Profile',
+	components: {
+		Navbar
+	},
     data: function(){
         return {
             accountPic: 'https://bulma.io/images/placeholders/128x128.png',
@@ -70,7 +65,7 @@ export default {
     },
     methods: {
 		requestImages() {
-			axios.post('/get?token=' + this.$store.getters.getToken)
+			axios.post('/get?token=' + this.$cookies.get('token'))
 							.then((response) => {
 								console.log(response.data);
 								if (response.data["status"] === "OK") {
@@ -102,7 +97,6 @@ export default {
             this.$router.push({name: 'Home'})
         },
         drawImageOnCanvas () {
-			console.log('test')
 			for (var i = 0; i < this.getImages.length; ++i) {
 				let item = this.getImages[i]
 				var canvas = document.getElementById(item.id).getContext('2d')
@@ -114,26 +108,32 @@ export default {
 				}
 			}
         }
-    },
+	},
     mounted() {
-		this.drawImageOnCanvas();
-    }
+		this.$nextTick(this.drawImageOnCanvas());
+		console.log(2);
+	}	
 
 }
 </script>
 
 <style scoped>
-  .title {
+@import '../styles/Main.css';
+.title {
   margin-top: 10px;
-  }
-  canvas {
+}
+.section {
+	background-color: #f7efed;
+}
+canvas {
 	height: 200px; 
 	width: 200px;
 	border: 10px solid;
   }
   .container {
 	margin: 5px 5px 5px 5px;
-  }
-
-  @import '../css/Nuvbar.css';
+  }  
+.shadow {
+	height: 25px;
+}
 </style>
