@@ -30,7 +30,7 @@ export default {
         },
         goToHome () {
             if (this.$router.currentRoute.name !== 'Home') {
-                this.$router.push({name: ''})
+                this.$router.push({name: 'Home'})
             }
         },
     }
