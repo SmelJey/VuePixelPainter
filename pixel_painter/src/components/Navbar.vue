@@ -15,15 +15,23 @@ export default {
     methods: {
         goToProfile () {
             console.log(this.$cookies.get('token'));
-            if (this.$cookies.get('token').length === 32){
-                this.$router.push({name: 'Profile'})
+            if (this.$cookies.get('token') !== null) {
+                if (this.$router.currentRoute.name !== 'Profile') {
+                    this.$router.push({name: 'Profile'})
+                }
+            } else {
+                this.$router.push({name: 'Auth'})
             }
         },
         goToRedactor () {
-            this.$router.push({name: 'Painter'})
+            if (this.$router.currentRoute.name !== 'Painter') {
+                this.$router.push({name: 'Painter'})
+            }
         },
         goToHome () {
-            this.$router.push({name: ''})
+            if (this.$router.currentRoute.name !== 'Home') {
+                this.$router.push({name: ''})
+            }
         },
     }
 }

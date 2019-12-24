@@ -20,8 +20,8 @@
 		<section class="section">
 			<textarea class="textarea is-fullwidth"></textarea>
 		</section>
-		<section class="section">
-			<span class="container" v-for="image in getImages" v-bind:key="image.id"> 
+		<section class="section" v-if="imageList">
+			<span class="container" v-for="image in getImages" v-bind:key="image.id">
 				<canvas :id="image.id" width="16" height="16"></canvas>
 			</span>
 		</section>
@@ -37,7 +37,7 @@
 			'Access-Control-Allow-Origin': 'http://localhost:8080/',
 			'allow_origins' : 'http://localhost:8080/'
 		}
-	})
+	});
 
 import Navbar from './Navbar.vue'
 export default {
@@ -50,16 +50,18 @@ export default {
             accountPic: 'https://bulma.io/images/placeholders/128x128.png',
             accountName: this.$store.getters.getUsername,
             accountMeta: '@None',
-            imageList: [],
+            imageList: null,
             offset: 0,
-            numberOfPic: 50
+            numberOfPic: 50,
+			isRequired: false
         }
     },
     computed: {
         getImages() {
 			if (!this.isRequired) {
 				this.requestImages();
-			}	
+			}
+
             return this.imageList
         }
     },
@@ -68,10 +70,13 @@ export default {
 			axios.post('/get?token=' + this.$cookies.get('token'))
 							.then((response) => {
 								console.log(response.data);
+								let list = []
 								if (response.data["status"] === "OK") {
-									for (let i = 0; i < response.data["items"].length(); ++i) {
-										this.imageList.push({id: i, url: response.data["items"][i].data});
+									for (let i = 0; i < response.data["items"].length; ++i) {
+										list.push({id: i, url: response.data["items"][i].data});
 									}
+									this.imageList = list;
+									this.drawImageOnCanvas()
 								} else {
 									this.goToAuth();
 								}
@@ -96,13 +101,12 @@ export default {
         goToHome () {
             this.$router.push({name: 'Home'})
         },
-        drawImageOnCanvas () {
-			for (var i = 0; i < this.getImages.length; ++i) {
-				let item = this.getImages[i]
-				var canvas = document.getElementById(item.id).getContext('2d')
-				var image = new Image(16, 16)
-				image.src = item.url
-				console.log(image);
+        drawImageOnCanvas() {
+			for (let i = 0; i < this.imageList.length; ++i) {
+				let item = this.imageList[i];
+				let canvas = document.getElementById(item.id).getContext('2d');
+				let image = new Image(16, 16);
+				image.src = item.url;
 				image.onload = function() {
 					canvas.drawImage(image, 0, 0)
 				}
@@ -110,7 +114,7 @@ export default {
         }
 	},
     mounted() {
-		this.$nextTick(this.drawImageOnCanvas());
+		this.requestImages();
 		console.log(2);
 	}	
 

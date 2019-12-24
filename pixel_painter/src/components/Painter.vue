@@ -208,11 +208,9 @@
                     }).catch(error => console.error(error));
             },
             publish: function() {
-
                 let c = document.getElementById('canvas');
-                //let data = { image: c.toDataURL(), date: Date.now() };
                 console.log(this.$cookies.get('token'));
-                axios.post('/create?data=' + c.toDataURL()
+                axios.post('/create?data=' + encodeURIComponent(c.toDataURL())
                     + '&is_private=false'
                     + '&token=' + this.$cookies.get('token'))
                     .then((response) => {
