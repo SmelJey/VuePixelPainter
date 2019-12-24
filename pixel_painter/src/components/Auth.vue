@@ -179,7 +179,7 @@
 							+ '&password=' + this.inputPassword)
 						.then((response) => {
 							if (response.data["status"] === "OK"){
-								this.$store.commit('setToken', response.data['token']);
+								this.$cookies.set('token', response.data['token'], 3600);
 								this.$router.push({name: 'Home'});
 							} else {
 								this.haveError = true;

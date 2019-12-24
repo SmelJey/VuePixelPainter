@@ -14,13 +14,16 @@
 export default {
     methods: {
         goToProfile () {
-            this.$router.push({name: 'Profile'})
+            console.log(this.$cookies.get('token'));
+            if (this.$cookies.get('token').length === 32){
+                this.$router.push({name: 'Profile'})
+            }
         },
         goToRedactor () {
             this.$router.push({name: 'Painter'})
         },
         goToHome () {
-            this.$router.push({name: 'Home'})
+            this.$router.push({name: ''})
         },
     }
 }

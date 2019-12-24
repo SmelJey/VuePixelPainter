@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+import VueCookies from 'vue-cookies'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import VueCarousel from 'vue-carousel'
@@ -16,6 +17,7 @@ import './../node_modules/bulma/css/bulma.css'
 Vue.use(VueCarousel);
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueCookies);
 
 const store = () => new Vuex.Store({
   state: {
@@ -35,8 +37,8 @@ const store = () => new Vuex.Store({
 
 const router = new VueRouter({
   routes: [
-    { path: '/', name: 'Auth', component: Auth },
-    { path: '/home', name: 'Home', component: Home },
+    { path: '/auth', name: 'Auth', component: Auth },
+    { path: '/', name: 'Home', component: Home },
     { path: '/profile', name: 'Profile', component: Profile },
     { path: '/painter', name: 'Painter', component: Painter}
   ], 

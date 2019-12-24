@@ -211,12 +211,15 @@
 
                 let c = document.getElementById('canvas');
                 //let data = { image: c.toDataURL(), date: Date.now() };
-
+                console.log(this.$cookies.get('token'));
                 axios.post('/create?data=' + c.toDataURL()
                     + '&is_private=false'
-                    + '&token=' + this.$store.getters.getToken)
+                    + '&token=' + this.$cookies.get('token'))
                     .then((response) => {
                         console.log(response.data)
+                        if (response.data['status'] === 'INVALID_TOKEN'){
+                            this.$router.push('auth');
+                        }
                     })
                     .catch((error) => {
                         console.log(error)
