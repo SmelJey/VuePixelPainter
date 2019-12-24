@@ -56,7 +56,7 @@
             </div>
         </div>
 		<canvas class="box" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
-				v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove">
+				v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove" onload="restorePainter()">
 		</canvas>
         <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
             <div class="column is-multiline">
@@ -169,21 +169,30 @@
             }
         },
         methods: {
-            goToProfile () {
-                this.$router.push({name: 'Profile'})
-            },
-            goToRedactor () {
-                this.$router.push({name: 'Painter'})
-            },
             getColumn: function(column, container){
                 return container.filter((item, indx) => (indx % 2) == column);
+            },
+            restorePainter: function() {
+                console.log(this.$store.getters.getPainterData);
+                let canvas = document.getElementById("canvas");
+                let ctx = canvas.getContext("2d");
+
+                let img = new window.Image;
+                img.addEventListener("load", () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    this.showLoader = false;
+                });
+
+                img.setAttribute("src", localStorage.getItem('painterData'));
             },
             clear: function() {
                 let c = document.getElementById("canvas");
                 let ctx = c.getContext("2d");
                 ctx.fillStyle = "#FFFFFF";
                 ctx.fillRect(0, 0, 16, 16);
-                ctx.fillStyle = this.selectedColor
+                ctx.fillStyle = this.selectedColor;
+                localStorage.setItem('painterData', c.toDataURL());
             },
             selectColor: function(color) {
                 let c = document.getElementById("canvas");
@@ -238,6 +247,7 @@
                             ctx.clearRect(0, 0, canvas.width, canvas.height);
                             ctx.drawImage(img, 0, 0);
                             this.showLoader = false;
+                            localStorage.setItem('painterData', canvas.toDataURL())
                         });
 
                         img.setAttribute("src", this.loadFromURL);
@@ -285,9 +295,14 @@
                         || this.currentMouse.y < 0 || this.currentMouse.y > 16)
                     this.mouse.down = false;
 
-                this.draw(event)
+                this.draw(event);
+                let c = document.getElementById('canvas');
+                localStorage.setItem('painterData', c.toDataURL())
             }
         },
+        mounted() {
+            this.restorePainter()
+        }
     }
 
     function testImage(url, callback) {

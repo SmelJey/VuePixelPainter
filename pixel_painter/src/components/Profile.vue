@@ -89,18 +89,6 @@ export default {
 		changeProfile () {
 
 		},
-		goToAuth () {
-			this.$router.push({name: 'Auth'})
-		},
-        goToProfile () {
-            this.$router.push({name: 'Profile'})
-        },
-        goToRedactor () {
-            this.$router.push({name: 'Painter'})
-        },
-        goToHome () {
-            this.$router.push({name: 'Home'})
-        },
         drawImageOnCanvas() {
 			for (let i = 0; i < this.imageList.length; ++i) {
 				let item = this.imageList[i];

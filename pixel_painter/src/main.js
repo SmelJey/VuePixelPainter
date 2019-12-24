@@ -21,21 +21,14 @@ Vue.use(VueCookies);
 
 const store = () => new Vuex.Store({
   state: {
-    token: '',
     username: 'guest',
   },
   getters: {
-    getToken: state => {
-      return state.token;
-    },
     getUsername: state => {
       return state.username;
     }
   },
   mutations: {
-    setToken (state, token) {
-      state.token = token
-    },
     setUsername (state, username) {
       state.username = username
     } 
