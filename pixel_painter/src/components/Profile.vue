@@ -22,13 +22,15 @@
 					<p class="title is-2">{{ accountName }}</p>
 					<p class="subtitle is-3">{{ accountMeta }}</p>
 				</div>
+				<div class="media-right">
+				</div>
 			</div>
 		</section>
 		<section class="section">
 			<textarea class="textarea is-fullwidth"></textarea>
 		</section>
 		<section class="section">
-			<span class="container is-fluid" v-for="image in getImages" v-bind:key="image.id"> 
+			<span class="container" v-for="image in getImages" v-bind:key="image.id"> 
 				<canvas :id="image.id" width="16" height="16"></canvas>
 			</span>
 		</section>
@@ -36,29 +38,60 @@
 </template>
 
 <script>
+	import Axios from 'axios'
+	const axios = Axios.create({
+		baseURL: 'http://localhost:8080/gallery',
+		timeout: 1000,
+		headers: {
+			'Access-Control-Allow-Origin': 'http://localhost:8080/',
+			'allow_origins' : 'http://localhost:8080/'
+		}
+	})
+
 export default {
     name: 'Profile',
     data: function(){
         return {
             accountPic: 'https://bulma.io/images/placeholders/128x128.png',
-            accountName: 'John Smith',
-            accountMeta: '@ggwp',
-            numberOfPic: 4
+            accountName: this.$store.getters.getUsername,
+            accountMeta: '@None',
+            imageList: [],
+            offset: 0,
+            numberOfPic: 50
         }
     },
     computed: {
         getImages() {
-            //todo backend task
-            return [{id: 0, url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAa0lEQVQ4T62TQQ4AIQgD4f+PZsPBsDatxCBHhbFAdRuGD+vtNSDCzAGaZxiVQ5LzchUhLEH7I+I1VrhUtICuOEFtC2w3vC0xgxFgl1gotiFDH6jpq1VGECOxZFRVOQcn/kF6M6+tfP+1xgo+WtAqDbTLNqoAAAAASUVORK5CYII='},
-                    {id: 1, url: 'https://bulma.io/images/placeholders/96x96.png'},
-                    {id: 2, url: 'https://bulma.io/images/placeholders/96x96.png'},
-                    {id: 3, url: 'https://bulma.io/images/placeholders/96x96.png'},
-                    {id: 4, url: 'https://bulma.io/images/placeholders/96x96.png'},
-                    {id: 5, url: 'https://bulma.io/images/placeholders/96x96.png'},
-                    {id: 6, url: 'https://bulma.io/images/placeholders/96x96.png'}]
+			if (!this.isRequired) {
+				this.requestImages();
+			}	
+            return this.imageList
         }
     },
     methods: {
+		requestImages() {
+			axios.post('/get?token=' + this.$store.getters.getToken)
+							.then((response) => {
+								console.log(response.data);
+								if (response.data["status"] === "OK") {
+									for (let i = 0; i < response.data["items"].length(); ++i) {
+										this.imageList.push({id: i, url: response.data["items"][i].data});
+									}
+								} else {
+									this.goToAuth();
+								}
+								this.isRequired = true;
+							})
+							.catch((error) => {
+								console.log(error);
+							});
+		},
+		changeProfile () {
+
+		},
+		goToAuth () {
+			this.$router.push({name: 'Auth'})
+		},
         goToProfile () {
             this.$router.push({name: 'Profile'})
         },
@@ -75,7 +108,10 @@ export default {
 				var canvas = document.getElementById(item.id).getContext('2d')
 				var image = new Image(16, 16)
 				image.src = item.url
-				canvas.drawImage(image, 0, 0)
+				console.log(image);
+				image.onload = function() {
+					canvas.drawImage(image, 0, 0)
+				}
 			}
         }
     },
@@ -94,6 +130,9 @@ export default {
 	height: 200px; 
 	width: 200px;
 	border: 10px solid;
+  }
+  .container {
+	margin: 5px 5px 5px 5px;
   }
 
   @import '../css/Nuvbar.css';

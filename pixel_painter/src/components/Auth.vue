@@ -150,6 +150,7 @@
 							.then((response) => {
 								if (response.data["status"] === "OK"){
 									this.$store.commit('setToken', response.data['token']);
+									this.$store.commit('setUsername', this.inputUsername);
 									this.showModal = false;
 								} else {
 									this.haveError = true;

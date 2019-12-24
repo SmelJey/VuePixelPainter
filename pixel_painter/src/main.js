@@ -19,17 +19,24 @@ Vue.use(Vuex);
 
 const store = () => new Vuex.Store({
   state: {
-    token: ''
+    token: '',
+    username: 'guest',
   },
   getters: {
     getToken: state => {
-      return state.token
+      return state.token;
+    },
+    getUsername: state => {
+      return state.username;
     }
   },
   mutations: {
     setToken (state, token) {
       state.token = token
-    }
+    },
+    setUsername (state, username) {
+      state.username = username
+    } 
   }
 });
 
