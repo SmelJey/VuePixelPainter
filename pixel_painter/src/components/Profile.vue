@@ -62,7 +62,7 @@
 			</span>
 		</section>
 		<div>
-			<button v-if="loadedPic === 50" v-on:click="requestImages()" class="button">Load More</button>
+			<button v-if="loadedPic === 50" v-on:click="isRequired = false" class="button">Load More</button>
 
 		</div>
 	</div>
@@ -90,6 +90,7 @@ export default {
             accountPic: 'https://bulma.io/images/placeholders/128x128.png',
             accountName: '',
             accountMeta: '',
+            isRequired: false,
 			newMeta: {
 				first_name: '',
 				second_name: '',
@@ -97,7 +98,7 @@ export default {
 				country: '',
 				vk_profile: ''
 			},
-			imageList: null,
+			imageList: [],
 			offset: 0,
             numberOfPic: 50,
 			showModal: false,
@@ -120,22 +121,24 @@ export default {
 				'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic + '&token=' + this.$cookies.get('token'))
 							.then((response) => {
 								console.log(response.data);
-								let list = []
+								let list = [];
 								if (response.data["status"] === "OK") {
-									this.loadedPic = response.data["items"].length;
-									++this.offset;
 									for (let i = 0; i < response.data["items"].length; ++i) {
-										list.push({id: i, url: response.data["items"][i].data});
+										list.push({id: i + this.offset , url: response.data["items"][i].data});
 									}
-									this.imageList = list;
-									this.drawImageOnCanvas()
+                                    this.loadedPic = response.data["items"].length;
+                                    this.offset += this.loadedPic;
+									this.imageList.push.apply(this.imageList, list);
+									this.drawImageOnCanvas();
 								} else {
-									this.goToAuth();
+									this.$router.push({name: 'Auth'})
 								}
 							})
 							.catch((error) => {
+                                this.isRequired = false;
 								console.log(error);
 							});
+            this.isRequired = true;
 		},
 		changeProfile () {
 
@@ -261,7 +264,6 @@ export default {
 		}
 	},
     mounted() {
-		this.requestImages();
 		this.requestMeta();
 		console.log(2);
 	}	
