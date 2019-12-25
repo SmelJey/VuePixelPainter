@@ -33,22 +33,12 @@
 				</footer>
 			</div>
 		</div>
-		<section class="section">
-			<div class="media">
-				<div class="media-left">
-					<figure class="image is128x128">
-						<img class="is-rounded" :src="accountPic">
-					</figure>
-				</div>
-				<div class="media-content">
-					<p class="title is-2">{{ accountName }}</p>
-					<p class="subtitle is-3">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
-				</div>
-				<div class="media-right">
-				</div>
-			</div>
+		<section class="section box has-text-left">
+            <p class="title is-1">Profile</p>
+            <p class="title is-2">{{ "@" + accountName }}</p>
+            <p class="subtitle is-3">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
 		</section>
-		<section class="section has-text-left">
+		<section class="section card has-text-left">
 			<p class="title">Personal information: </p>
 			<p class="subtitle">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
 			<p class="subtitle">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
@@ -56,7 +46,9 @@
 			<p class="subtitle">{{ accountMeta['vk_profile'] ? 'Vk: ' + accountMeta['vk_profile'] : ''}}</p>
 			<button class="button" v-on:click="showModal = true"> Change your personal information </button>
 		</section>
+
 		<section class="section" v-if="imageList">
+            <p class="title">Personal gallery</p>
 			<span class="container" v-for="image in getImages" v-bind:key="image.id">
 				<canvas :id="image.id" width="16" height="16"></canvas>
 			</span>
@@ -258,7 +250,7 @@ export default {
 			this.showModal = false;
 			for (let i in this.accountMeta) {
 				if (Object.prototype.hasOwnProperty.call(this.accountMeta, i)) {
-					this.newMeta.set(i, this.accountMeta[i]);
+					this.newMeta[i] = this.accountMeta[i];
 				}
 			}
 		}
