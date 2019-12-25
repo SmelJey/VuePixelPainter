@@ -1,6 +1,6 @@
 <template>
     <div class="feed">
-        <Post/>
+        <Post v-bind:url="url" v-bind:postAuthor="postAuthor" v-bind:likes="likes"/>
     </div>
 </template>
 
@@ -9,6 +9,11 @@ import Post from './Post.vue'
 
 export default {
     name: 'Cards',
+	props: {
+			url: String,
+			postAuthor: String,
+			likes: Number
+	},
     components: {
         Post
     }

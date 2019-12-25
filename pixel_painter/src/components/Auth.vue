@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="auth">
 		<div v-if="showModal" class="modal is-active">
 			<div v-on:click="closeModal()" class="modal-background"></div>
 			<div class="modal-card">
@@ -44,7 +44,7 @@
 		</div>
 
 		<div class="columns">
-			<div class="column is-two-thirds is-hidden-mobile is-widescreen">
+			<div id="carousel" class="column is-two-thirds is-hidden-mobile is-widescreen">
 				<carousel :autoplay="true" :perPage="1" :paginationEnabled="true" :paginationPosition="'bottom-overlay'" :loop="true">
 					<slide>
 						<figure class="image is-640x640">
@@ -59,8 +59,8 @@
 				</carousel>
 			</div>
 			<div id="register" class="column">
-				<div class="field">
-					<figure class="image is-1980x1080">
+				<div id="logoback" class="field">
+					<figure id="logo" class="image is-1980x1080">
 						<img src='../assets/main_logo.png'>
 					</figure>
 				</div>
@@ -126,10 +126,15 @@
 		methods: {
 			openModal: function() {
 				this.showModal = true;
+				this.inputUsername = '';
+				this.inputPassword = '';
+				this.inputEmail = '';
 				this.haveError = false;
 			},
 			closeModal: function() {
 				this.showModal = false;
+				this.inputUsername = '';
+				this.inputPassword = '';
 				this.haveError = false;
 			},
 			register: function() {
@@ -201,24 +206,42 @@
 </script>
 
 <style scoped>
-.button {
-	margin-top: 10px
-}
-.carousel_item{
-	min-height: 100vh;
-	max-height: 100vh;
-}
-.columns{
-	min-height: 100vh;
-	max-height: 100vh;
+
+#logo {
+	padding-top: 20px;
+	padding-right: 15px;
+	padding-left: 20px;
+	padding-bottom: 20px;
 }
 
-#auth{
-	min-height: 100vh;
-	max-height: 100vh;
-}
-#register{
+.button {
 	margin-top: 10px;
-	max-height: 100vh;
+}
+
+.carousel_item{
+	min-height: 100vh;
+}
+
+.field {
+	margin-left: 10px;
+	margin-top: 10px;
+	margin-right: 20px;
+}
+
+#carousel {
+	padding-right: 5px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+
+#logoback {
+	margin: 0px 0px 0px 0px;
+	background-color: #fe6e4b;
+	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.45);
+}
+
+#register{
+	padding: 0px 0px 0px 0px;
+	height: 100%;
 }
 </style>

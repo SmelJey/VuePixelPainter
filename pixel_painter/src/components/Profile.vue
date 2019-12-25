@@ -25,6 +25,10 @@
 				<canvas :id="image.id" width="16" height="16"></canvas>
 			</span>
 		</section>
+		<div>
+			<button v-if="loadedPic === 50" v-on:click="requestImages()" class="button">Load More</button>
+
+		</div>
 	</div>
 </template>
 
@@ -53,7 +57,7 @@ export default {
             imageList: null,
             offset: 0,
             numberOfPic: 50,
-			isRequired: false
+            loadedPic: 0
         }
     },
     computed: {
@@ -61,17 +65,19 @@ export default {
 			if (!this.isRequired) {
 				this.requestImages();
 			}
-
             return this.imageList
         }
     },
     methods: {
 		requestImages() {
-			axios.post('/get?token=' + this.$cookies.get('token'))
+			axios.post(
+				'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic + '&token=' + this.$cookies.get('token'))
 							.then((response) => {
 								console.log(response.data);
 								let list = []
 								if (response.data["status"] === "OK") {
+									this.loadedPic = response.data["items"].length;
+									++this.offset;
 									for (let i = 0; i < response.data["items"].length; ++i) {
 										list.push({id: i, url: response.data["items"][i].data});
 									}
@@ -80,7 +86,6 @@ export default {
 								} else {
 									this.goToAuth();
 								}
-								this.isRequired = true;
 							})
 							.catch((error) => {
 								console.log(error);
@@ -126,17 +131,21 @@ export default {
 .title {
   margin-top: 10px;
 }
+
 .section {
 	background-color: #f7efed;
 }
+
 canvas {
 	height: 200px; 
 	width: 200px;
 	border: 10px solid;
-  }
-  .container {
+ }
+
+.container {
 	margin: 5px 5px 5px 5px;
-  }  
+}
+
 .shadow {
 	height: 25px;
 }
