@@ -11,14 +11,36 @@
 </template>
 
 <script>
+    import Axios from 'axios'
+    const axios = Axios.create({
+        baseURL: 'http://localhost:8080/account',
+        timeout: 1000,
+        headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:8080/',
+            'allow_origins' : 'http://localhost:8080/'
+        }
+    });
+
 export default {
     methods: {
         goToProfile () {
             console.log(this.$cookies.get('token'));
             if (this.$cookies.get('token') !== null) {
-                if (this.$router.currentRoute.name !== 'Profile') {
-                    this.$router.push({name: 'Profile'})
-                }
+                axios.get('check_token?token=' + this.$cookies.get('token'))
+                    .then((response) => {
+                        console.log(response.data);
+                        if (response.data["status"] === "OK") {
+                            if (this.$router.currentRoute.name !== 'Profile') {
+                                this.$router.push({name: 'Profile'})
+                            }
+                        } else {
+                            this.$router.push({name: 'Auth'})
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+
             } else {
                 this.$router.push({name: 'Auth'})
             }

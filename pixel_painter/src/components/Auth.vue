@@ -48,12 +48,12 @@
 				<carousel :autoplay="true" :perPage="1" :paginationEnabled="true" :paginationPosition="'bottom-overlay'" :loop="true">
 					<slide>
 						<figure class="image is-640x640">
-							<img class="carousel_item" src='../assets/main_logo.png'>
+							<img class="carousel_item" src='https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/134161196/original/f3c5bca081b9a7413c4e2e187c854a8046923e36/make-a-16x16-pixel-art.png'>
 						</figure>
 					</slide>
 					<slide>
 						<figure class="image is-640x640">
-							<img class="carousel_item" src='../assets/main_logo.png'>
+							<img class="carousel_item" src='http://www.photonstorm.com/wp-content/uploads/2011/09/step4.gif'>
 						</figure>
 					</slide>
 				</carousel>
