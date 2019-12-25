@@ -102,7 +102,7 @@ export default {
             numberOfPic: 50,
 			showModal: false,
 			error: "",
-			reqCount: 0
+			reqCount: 0,
             loadedPic: 0
         }
     },
