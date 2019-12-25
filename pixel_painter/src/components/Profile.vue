@@ -258,7 +258,7 @@ export default {
 			this.showModal = false;
 			for (let i in this.accountMeta) {
 				if (Object.prototype.hasOwnProperty.call(this.accountMeta, i)) {
-					this.newMeta.set(i, this.accountMeta[i]);
+					this.newMeta[i] = this.accountMeta[i];
 				}
 			}
 		}

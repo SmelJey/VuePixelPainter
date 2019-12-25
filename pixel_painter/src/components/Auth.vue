@@ -220,6 +220,7 @@
 
 .carousel_item{
 	min-height: 100vh;
+	max-height: 100vh;
 }
 
 .field {
