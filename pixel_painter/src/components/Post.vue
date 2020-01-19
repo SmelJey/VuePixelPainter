@@ -1,20 +1,20 @@
 <template>
     <div class="post">
-        <div class="user">
-            <div class="min">
-                <a><img @click="goToProfile()" src="../assets/test/ava.jpg"/></a>
-                <div>
-                    <a><p @click="goToProfile()">{{postAuthor}}</p></a>
+        <div class="card" v-for="card in this.$store.getters.DATA" :key="card.id">
+            <img class="photo" height="340px" width="340"/>
+            <div class="shadow"/>
+            <div class="user">
+                <div class="min">
+                    <a><img class="ava" @click="goToProfile()" src="../assets/test/ava.jpg"/></a>
+                    <div>
+                        <a><p @click="goToProfile()">Andrey</p></a>
+                    </div>
+                    <div class="like">
+                        <a><img src="../assets/icons/like.png" height="25px" width="25px"/></a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <canvas id="picture" width="16" height="16"/>
-        <div class="title">
-            <p>tutu</p>
-        </div>
-        <div class="deskription">
-            <p>{{likes}}</p>
-        </div>
+      </div>
     </div>
 </template>
 

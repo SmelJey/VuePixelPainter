@@ -1,6 +1,6 @@
 <template>
     <div class="feed">
-        <Post v-bind:url="url" v-bind:postAuthor="postAuthor" v-bind:likes="likes"/>
+        <Post/>
     </div>
 </template>
 
