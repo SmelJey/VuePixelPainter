@@ -44,7 +44,7 @@
 			<p class="subtitle">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
 			<p class="subtitle">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
 			<p class="subtitle">{{ accountMeta['vk_profile'] ? 'Vk: ' + accountMeta['vk_profile'] : ''}}</p>
-			<button class="button" v-on:click="showModal = true"> Change your personal information </button>
+			<button class="button is-success" v-on:click="showModal = true"> Change your personal information </button>
 		</section>
 
 		<section class="section" v-if="imageList">
@@ -174,45 +174,29 @@ export default {
 				this.$router.push({name: 'Auth'})
 			}
 		},
-		async saveMeta() {
+		saveMeta() {
 			console.log(this.newMeta);
-			let flag = true;
-			for (let key in this.newMeta) {
-				if (['status', 'login', 'password', 'email'].includes(key))
-					continue;
-				if (!Object.hasOwnProperty.call(this.newMeta, key))
-					continue;
-				console.log([key, this.newMeta[key]]);
-				this.reqCount++;
-				if (this.$cookies.get('token') !== null){
-					Axios.post('http://localhost:8080/account/edit?&field=' + key + '&value='
-						+ this.newMeta[key] + '&token=' + this.$cookies.get('token'))
-						.then((response) => {
-							console.log(response.data);
-							console.log([key, this.newMeta[key]]);
-							flag &= response.data['status'] === 'OK';
-							if (response.data['status'] === 'INVALID_TOKEN') {
-								if (this.$router.currentRoute.name !== 'Auth')
-									this.$router.push({name: 'Auth'})
-							}
-							this.reqCount--;
-							if (this.reqCount <= 0) {
-								this.requestMeta();
-								if (flag) {
-									this.showModal = false;
-								} else {
-									this.error = "Not all information was processed"
-								}
-							}
-						}).catch((error) => {
-							console.log(error);
-						})
 
-				} else {
-					this.$router.push({name: 'Auth'})
-				}
-				await new Promise(r => setTimeout(r, 100));
-			}
+			Axios.post('http://localhost:8080/account/edit?&field=first_name,second_name,age,vk_profile,country'
+					+ "&value=" + this.newMeta["first_name"] + "," + this.newMeta["second_name"] + ","
+					+ this.newMeta["age"] + "," + this.newMeta["vk_profile"] + "," + this.newMeta["country"]
+					+ "&token=" + this.$cookies.get('token'))
+					.then((response) => {
+						console.log(response.data);
+						if (response.data['status'] === 'INVALID_TOKEN') {
+							if (this.$router.currentRoute.name !== 'Auth')
+								this.$router.push({name: 'Auth'})
+						}
+						this.requestMeta();
+						if (response.data['status'] === 'OK') {
+							this.showModal = false;
+						} else {
+							this.error = "Not all information was processed"
+						}
+
+					}).catch((error) => {
+						console.log(error);
+					});
 		},
 		changePass() {
 			Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
