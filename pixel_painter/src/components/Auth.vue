@@ -230,7 +230,7 @@
 }
 
 #carousel {
-	padding-right: 5px;
+	padding-right: 0px;
 	padding-bottom: 0px;
 	margin-bottom: 0px;
 }

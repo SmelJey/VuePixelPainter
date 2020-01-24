@@ -20,7 +20,6 @@
 						<button class="button is-success" v-on:click="changePass">Change password</button>
 					</div>
 
-
 					<input id="fname" class="input" type="text" placeholder="First Name"  v-model="newMeta['first_name']"/>
 					<input id="sname" class="input" type="text" placeholder="Second Name" v-model="newMeta['second_name']"/>
 					<input id="age" class="input" type="text" placeholder="Age" v-model="newMeta['age']"/>
@@ -33,29 +32,43 @@
 				</footer>
 			</div>
 		</div>
-		<section class="section box has-text-left">
-            <p class="title is-1">Profile</p>
-            <p class="title is-2">{{ "@" + accountName }}</p>
-            <p class="subtitle is-3">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
-		</section>
-		<section class="section card has-text-left">
-			<p class="title">Personal information: </p>
-			<p class="subtitle">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
-			<p class="subtitle">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
-			<p class="subtitle">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
-			<p class="subtitle">{{ accountMeta['vk_profile'] ? 'Vk: ' + accountMeta['vk_profile'] : ''}}</p>
-			<button class="button is-success" v-on:click="showModal = true"> Change your personal information </button>
-		</section>
+			<section class="hero">
+			<div class="hero-body">
+				<div class="has-text-centered">
+					<h1 class="title is-1"> Profile </h1>
+					<h2 class="subtitle is-2">
+						{{"@" + accountName}}
+					</h2>
+				</div>
+			</div>
+			<div class="hero-foot">
+				<nav class="tabs is-boxed is-fullwidth is-large">
 
-		<section class="section" v-if="imageList">
-            <p class="title">Personal gallery</p>
-			<span class="container" v-for="image in getImages" v-bind:key="image.id">
-				<canvas :id="image.id" width="16" height="16"></canvas>
-			</span>
-		</section>
-		<div>
-			<button v-if="loadedPic === 50" v-on:click="isRequired = false" class="button">Load More</button>
+						<ul>
+							<li class="tab is-active" v-on:click="openTab('Gallery')"><a>Gallery</a></li>
+							<li class="tab" v-on:click="openTab('About')"><a>About</a></li>
+						</ul>
 
+				</nav>
+			</div>
+		</section>
+		<div class="box section">
+			<div id="Gallery" class="content-tab">
+				<span class="container" v-for="image in getImages" v-bind:key="image.id">
+					<canvas :id="image.id" width="16" height="16"></canvas>
+				</span>
+				<div>
+					<button v-if="loadedPic === 50" v-on:click="isRequired = false" class="button">Load More</button>
+				</div>
+			</div>
+			<div id="About" style="display:none;" class="content-tab">
+				<p class="subtitle is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
+				<p class="subtitle">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
+				<p class="subtitle">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
+				<p class="subtitle">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
+				<p class="subtitle">{{ accountMeta['vk_profile'] ? 'Vk: ' + accountMeta['vk_profile'] : ''}}</p>
+				<button class="button is-success" v-on:click="showModal = true"> Change your personal information </button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -83,6 +96,7 @@ export default {
             accountName: '',
             accountMeta: '',
             isRequired: false,
+			currentTab: 'Gallery',
 			newMeta: {
 				first_name: '',
 				second_name: '',
@@ -108,6 +122,26 @@ export default {
         }
     },
     methods: {
+		openTab(tabName) {
+			var i, x, tablinks;
+			x = document.getElementsByClassName("content-tab");
+			for (i = 0; i < x.length; i++) {
+				x[i].style.display = "none";
+			}
+			tablinks = document.getElementsByClassName("tab");
+			if (tabName !== this.currentTab) {
+				for (i = 0; i < x.length; i++) {
+					if (tablinks[i].className.includes("is-active")) {
+						tablinks[i].className = tablinks[i].className.replace(" is-active", "");
+					} else {
+						tablinks[i].className += " is-active";
+					}
+				}
+			}
+			this.currentTab = tabName;
+
+			document.getElementById(tabName).style.display = "block";
+		},
 		requestImages() {
 			axios.post(
 				'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic + '&token=' + this.$cookies.get('token'))
