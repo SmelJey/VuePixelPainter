@@ -186,6 +186,7 @@
 						.then((response) => {
 							if (response.data["status"] === "OK"){
 								this.$cookies.set('token', response.data['token'], 3600);
+								this.$cookies.set('login', this.inputUsername, 3600);
 								this.$router.push({name: 'Home'});
 							} else {
 								this.haveError = true;

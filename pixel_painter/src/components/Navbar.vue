@@ -30,8 +30,9 @@ export default {
                     .then((response) => {
                         console.log(response.data);
                         if (response.data["status"] === "OK") {
-                            if (this.$router.currentRoute.name !== 'Profile') {
-                                this.$router.push({name: 'Profile'})
+                            if (this.$router.currentRoute.fullPath.toLowerCase()
+                                !== '/profile?id=' + this.$cookies.get('login').toLowerCase()) {
+                                this.$router.push('/profile?id=' + this.$cookies.get('login'))
                             }
                         } else {
                             this.$router.push({name: 'Auth'})

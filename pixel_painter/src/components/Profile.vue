@@ -32,7 +32,7 @@
 				</footer>
 			</div>
 		</div>
-			<section class="hero">
+		<section class="hero" v-if="!isInvalid">
 			<div class="hero-body">
 				<div class="has-text-centered">
 					<h1 class="title is-1"> Profile </h1>
@@ -43,16 +43,14 @@
 			</div>
 			<div class="hero-foot">
 				<nav class="tabs is-boxed is-fullwidth is-large">
-
-						<ul>
-							<li class="tab is-active" v-on:click="openTab('Gallery')"><a>Gallery</a></li>
-							<li class="tab" v-on:click="openTab('About')"><a>About</a></li>
-						</ul>
-
+					<ul>
+						<li class="tab is-active" v-on:click="openTab('Gallery')"><a>Gallery</a></li>
+						<li class="tab" v-on:click="openTab('About')"><a>About</a></li>
+					</ul>
 				</nav>
 			</div>
 		</section>
-		<div class="box section">
+		<div class="box section" v-if="!isInvalid">
 			<div id="Gallery" class="content-tab">
 				<span class="container" v-for="image in getImages" v-bind:key="image.id">
 					<canvas :id="image.id" width="16" height="16"></canvas>
@@ -67,8 +65,11 @@
 				<p class="subtitle">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
 				<p class="subtitle">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
 				<p class="subtitle">{{ accountMeta['vk_profile'] ? 'Vk: ' + accountMeta['vk_profile'] : ''}}</p>
-				<button class="button is-success" v-on:click="showModal = true"> Change your personal information </button>
+				<button class="button is-success" v-if="isSelf" v-on:click="showModal = true"> Change your personal information </button>
 			</div>
+		</div>
+		<div class="section box" v-if="isInvalid">
+			<h1 class="subtitle"> Error: there is no such profile</h1>
 		</div>
 	</div>
 </template>
@@ -90,10 +91,13 @@ export default {
 	components: {
 		Navbar
 	},
+	props: ['id'],
     data: function(){
         return {
             accountPic: 'https://bulma.io/images/placeholders/128x128.png',
             accountName: '',
+			isSelf: false,
+			isInvalid: false,
             accountMeta: '',
             isRequired: false,
 			currentTab: 'Gallery',
@@ -144,7 +148,7 @@ export default {
 		},
 		requestImages() {
 			axios.post(
-				'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic + '&token=' + this.$cookies.get('token'))
+				'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic + '&login=' + this.id)
 							.then((response) => {
 								console.log(response.data);
 								let list = [];
@@ -166,9 +170,6 @@ export default {
 							});
             this.isRequired = true;
 		},
-		changeProfile () {
-
-		},
         drawImageOnCanvas() {
 			for (let i = 0; i < this.imageList.length; ++i) {
 				let item = this.imageList[i];
@@ -183,9 +184,8 @@ export default {
 		requestMeta(){
 			if (this.$cookies.get('token') !== null){
 				console.log("requested");
-				Axios.get('http://localhost:8080/account/get?token=' + this.$cookies.get('token'))
+				Axios.get('http://localhost:8080/account/get?login=' + this.id)
 					.then((response) => {
-
 						console.log(response.data);
 						if (response.data['status'] === 'OK') {
 							this.accountName = response.data['login'];
@@ -197,9 +197,14 @@ export default {
 									this.newMeta[i] = this.accountMeta[i];
 								}
 							}
+							if (this.accountName === this.$cookies.get('login')){
+								this.isSelf = true;
+							}
 							console.log(this.newMeta);
 						} else if (response.data['status'] === 'INVALID_TOKEN') {
 							this.$router.push({name: 'Auth'})
+						} else if (response.data['status'] === 'INVALID_LOGIN') {
+							this.isInvalid = true;
 						}
 					}).catch((error) => {
 						console.log(error);
