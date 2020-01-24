@@ -184,6 +184,14 @@ export default {
 		requestMeta(){
 			if (this.$cookies.get('token') !== null){
 				console.log("requested");
+
+				Axios.get('http://localhost:8080/account/check_token?token=' + this.$cookies.get('token'))
+					.then((response) => {
+						if (response.data['status'] !== 'OK') {
+							this.isSelf = false;
+						}
+					});
+
 				Axios.get('http://localhost:8080/account/get?login=' + this.id)
 					.then((response) => {
 						console.log(response.data);
@@ -197,7 +205,8 @@ export default {
 									this.newMeta[i] = this.accountMeta[i];
 								}
 							}
-							if (this.accountName === this.$cookies.get('login')){
+							if (this.$cookies.get('login') != null
+									&& this.accountName === this.$cookies.get('login')){
 								this.isSelf = true;
 							}
 							console.log(this.newMeta);
@@ -210,7 +219,7 @@ export default {
 						console.log(error);
 					})
 			} else {
-				this.$router.push({name: 'Auth'})
+				this.isSelf = false;
 			}
 		},
 		saveMeta() {
