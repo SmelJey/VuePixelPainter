@@ -14,7 +14,8 @@ export default {
     components: {
         Navbar,
         Cards
-    }
+    },
+
 }
 </script>
 
