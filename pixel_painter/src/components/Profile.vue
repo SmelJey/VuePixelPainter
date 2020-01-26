@@ -148,13 +148,14 @@ export default {
 		},
 		requestImages() {
 			axios.post(
-				'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic + '&login=' + this.id)
+				'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
+					+ '&login=' + this.id + '&token=' + this.$cookies.get('token'))
 							.then((response) => {
 								console.log(response.data);
 								let list = [];
 								if (response.data["status"] === "OK") {
 									for (let i = 0; i < response.data["items"].length; ++i) {
-										list.push({id: i + this.offset , url: response.data["items"][i].data});
+										list.push({id: i + this.offset, url: response.data["items"][i].data});
 									}
                                     this.loadedPic = response.data["items"].length;
                                     this.offset += this.loadedPic;

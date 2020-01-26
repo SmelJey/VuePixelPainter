@@ -2,8 +2,11 @@
     <div class="feed">
         <Post v-for="card in getImages"
               :key="card.id"
+              :art-id="card.id"
               :author-name="card.owner"
-              :url="card.url">
+              :url="card.url"
+              :likes="card.likes"
+              :is-liked="card.isLiked">
         </Post>
     </div>
 </template>
@@ -51,7 +54,7 @@ export default {
     methods: {
         requestImages() {
             axios.post(
-                '/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic)
+                '/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic + '&token=' + this.$cookies.get('token'))
                 .then((response) => {
                     console.log(response.data);
                     let list = [];
@@ -60,7 +63,9 @@ export default {
                             list.push({
                                 id: response.data["items"][i].art_id,
                                 url: response.data["items"][i].data,
-                                owner: response.data["items"][i].owner_name
+                                owner: response.data["items"][i].owner_name,
+                                isLiked: response.data['items'][i].tokenLikedIt,
+                                likes: response.data['items'][i].likes
                             });
                         }
                         console.log(list);
