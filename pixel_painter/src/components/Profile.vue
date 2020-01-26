@@ -39,6 +39,7 @@
 					<h2 class="subtitle is-2">
 						{{"@" + accountName}}
 					</h2>
+					<h2 class="subtitle is-4"><img src="../assets/icons/like.png" height="25px" width="25px"/>{{ ' ' + this.likesCount }}</h2>
 				</div>
 			</div>
 			<div class="hero-foot">
@@ -101,6 +102,7 @@ export default {
             accountMeta: '',
             isRequired: false,
 			currentTab: 'Gallery',
+			likesCount: 0,
 			newMeta: {
 				first_name: '',
 				second_name: '',
@@ -127,7 +129,7 @@ export default {
     },
     methods: {
 		openTab(tabName) {
-			var i, x, tablinks;
+			let i, x, tablinks;
 			x = document.getElementsByClassName("content-tab");
 			for (i = 0; i < x.length; i++) {
 				x[i].style.display = "none";
@@ -206,6 +208,7 @@ export default {
 									this.newMeta[i] = this.accountMeta[i];
 								}
 							}
+							this.likesCount = this.newMeta['likes'];
 							if (this.$cookies.get('login') != null
 									&& this.accountName === this.$cookies.get('login')){
 								this.isSelf = true;
