@@ -305,10 +305,6 @@ export default {
   margin-top: 10px;
 }
 
-.section {
-	background-color: #f7efed;
-}
-
 canvas {
 	height: 200px; 
 	width: 200px;
@@ -322,8 +318,6 @@ canvas {
 .shadow {
 	height: 25px;
 }
-</style>
-@import '../styles/Main.css';
 
 #changeProfileButton {
 	font-family: "Bookman";
@@ -414,7 +408,4 @@ a:active {
 		font-size: large;
 	}
 }
-
-
-
 </style>
