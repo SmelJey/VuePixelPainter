@@ -1,66 +1,99 @@
 <template>
     <div class="main">
-        <nav>
-            <div class="content">
-                <img src="../assets/main_logo.png">
-                <div class="links">
-                    <a><img @click="goToRedactor()" src="../assets/icons/pen_icon.png"></a>
-                    <a><img @click="goToProfile()" src="../assets/icons/people_icon.png"></a>
+        <Navbar/>
+        <div class = "container is-fullwidth is-centered">
+            <div class="pixel-painter is-centered column"  id="pixel-painter">
+                <div class="modal is-active" v-if="showSaver">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Save image</p>
+                            <button class="delete" aria-label="close" v-on:click="showSaver = false"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <span>You can use this link for loading in this app</span>
+                            <div class="textarea" rows="3" style="word-wrap: break-word;">{{saveLink}}</div>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-success" v-on:click="save">Or download to computer</button>
+                        </footer>
+                    </div>
                 </div>
-            </div>
-        </nav> 
-        <div class="pixel-painter is-centered columns" id="pixel-painter">
-            <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
-                <div class="column is-multiline">
-                    <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, colorButtons)"
-                            v-on:click="btn.btnHandle(btn.color)"
-                            :key="indx"
-                            :style="{'background-color': btn.color}"></button>
-                </div>
-                <div class="column is-multiline">
-                    <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, colorButtons)"
-                            v-on:click="btn.btnHandle(btn.color)"
-                            :key="indx"
-                            :style="{'background-color': btn.color}"></button>
-                </div>
-            </div>
-        </div>
-		<canvas class="box" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
-				v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove">
-		</canvas>
-        <div class="column columns is-one-fifth is-multiline is-centered is-gapless">
-            <div class="column is-multiline">
-                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(0, funcButton)"
-                        v-on:click="btn.btnHandle(btn.color)"
-                        :key="indx"
-                        :style="{'background-color': btn.color}">
-                    {{btn.text}}
-                </button>
-                <button class="button is-fullwidth" v-on:click="showSaver = true">
-                    Save
-                </button>
 
+                <div class="modal is-active" v-if="showLoader">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">Load image</p>
+                            <button class="delete" aria-label="close" v-on:click="showLoader = false"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            <span>Input your link</span>
+                            <div class="notification" v-if="linkErr">
+                                <button class="delete"></button>
+                                Please input correct link
+                            </div>
+                            <label>
+                                <input class="input" type="text" v-model="loadFromURL">
+                            </label>
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-success" v-on:click="loadFromLink">Load image</button>
+                        </footer>
+                    </div>
+                </div>
+                <div class="field is-multiline is-centered is-gapless">
+                    <button class="button" v-for="(btn, indx) in colorButtons"
+                            v-on:click="btn.btnHandle(btn.color)"
+                            :key="indx"
+                            :style="{'background-color': btn.color}"></button>
+                </div>
+                <div class="columns is-centered is-multiline">
+                    <canvas class="box" style="margin: 0 auto;" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
+                        v-on:touchstart="handleMouseDown" v-on:touchmove="handleMouseMove" v-on:touchend="handleMouseUp"
+                        v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove" onload="restorePainter()">
+                    </canvas>
+                </div>
+
+                <div class="field is-multiline is-centered is-gapless">
+                    <button class="button" v-for="(btn, indx) in funcButton"
+                            v-on:click="btn.btnHandle(btn.color)"
+                            :key="indx"
+                            :style="{'background-color': btn.color}">
+                        {{btn.text}}
+                    </button>
+                    <button class="button" v-on:click="showSaver = true">
+                        Save
+                    </button>
+                    <button class="button" v-on:click="showLoader = true">
+                        Load from link
+                    </button>
+                </div>
             </div>
-            <div class="column is-multiline">
-                <button class="button is-fullwidth" v-for="(btn, indx) in getColumn(1, funcButton)"
-                        v-on:click="btn.btnHandle(btn.color)"
-                        :key="indx"
-                        :style="{'background-color': btn.color}">
-                    {{btn.text}}
-                </button>
-                <button class="button is-fullwidth" v-on:click="showLoader = true">Load from link</button>
-            </div>
+            <div class="column"></div>
+
         </div>
+
     </div>
 </template>
 
 <script>
-    //import Axios from 'axios'
-    const Axios = require('axios');
-    //import SaverModal from "./SaverModal";
+    import Navbar from './Navbar.vue'
+    import Axios from 'axios'
+    const axios = Axios.create({
+        baseURL: 'http://localhost:8080/gallery',
+        timeout: 1000,
+        headers: {
+            'Access-Control-Allow-Origin': 'http://localhost:8080/',
+            'allow_origins' : 'http://localhost:8080/'
+        }
+    });
 
     export default {
         name: 'Painter',
+        components: {
+            Navbar
+        },
         data : function() {
             return {
                 width: 16,
@@ -128,21 +161,30 @@
             }
         },
         methods: {
-            goToProfile () {
-                this.$router.push({name: 'Profile'})
-            },
-            goToRedactor () {
-                this.$router.push({name: 'Painter'})
-            },
             getColumn: function(column, container){
                 return container.filter((item, indx) => (indx % 2) == column);
+            },
+            restorePainter: function() {
+                console.log(this.$store.getters.getPainterData);
+                let canvas = document.getElementById("canvas");
+                let ctx = canvas.getContext("2d");
+
+                let img = new window.Image;
+                img.addEventListener("load", () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    this.showLoader = false;
+                });
+
+                img.setAttribute("src", localStorage.getItem('painterData'));
             },
             clear: function() {
                 let c = document.getElementById("canvas");
                 let ctx = c.getContext("2d");
                 ctx.fillStyle = "#FFFFFF";
                 ctx.fillRect(0, 0, 16, 16);
-                ctx.fillStyle = this.selectedColor
+                ctx.fillStyle = this.selectedColor;
+                localStorage.setItem('painterData', c.toDataURL());
             },
             selectColor: function(color) {
                 let c = document.getElementById("canvas");
@@ -168,9 +210,19 @@
             },
             publish: function() {
                 let c = document.getElementById('canvas');
-                let data = { image: c.toDataURL(), date: Date.now() };
-
-                console.log(JSON.stringify(data));
+                console.log(this.$cookies.get('token'));
+                axios.post('/create?data=' + encodeURIComponent(c.toDataURL())
+                    + '&is_private=false'
+                    + '&token=' + this.$cookies.get('token'))
+                    .then((response) => {
+                        console.log(response.data)
+                        if (response.data['status'] === 'INVALID_TOKEN'){
+                            this.$router.push('auth');
+                        }
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
             },
             loadFromLink : function() {
                 testImage(this.loadFromURL, (url, res) => {
@@ -187,12 +239,12 @@
                             ctx.clearRect(0, 0, canvas.width, canvas.height);
                             ctx.drawImage(img, 0, 0);
                             this.showLoader = false;
+                            localStorage.setItem('painterData', canvas.toDataURL())
                         });
 
                         img.setAttribute("src", this.loadFromURL);
                     }
                 });
-
             },
 
             draw: function () {
@@ -234,9 +286,14 @@
                         || this.currentMouse.y < 0 || this.currentMouse.y > 16)
                     this.mouse.down = false;
 
-                this.draw(event)
+                this.draw(event);
+                let c = document.getElementById('canvas');
+                localStorage.setItem('painterData', c.toDataURL())
             }
         },
+        mounted() {
+            this.restorePainter()
+        }
     }
 
     function testImage(url, callback) {
@@ -252,14 +309,32 @@
 </script>
 
 <style>
-	canvas {
+@import '../styles/Main.css';
+
+@media only screen and (min-width: 512px) {
+    canvas {
         margin-top: 13px;
-		width: 512px;
-		height: 512px;
-		image-rendering: -moz-crisp-edges;
-		image-rendering: -webkit-crisp-edges;
-		image-rendering: pixelated;
-		image-rendering: crisp-edges;
+        width: 512px;
+        height: 512px;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-crisp-edges;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
     }
-    @import '../css/Nuvbar.css';
+}
+
+@media only screen and (max-width: 512px) {
+    canvas {
+        margin-top: 13px;
+        width: 256px;
+        height: 256px;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-crisp-edges;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+    }
+}
+
+
+
 </style>

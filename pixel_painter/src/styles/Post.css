@@ -1,0 +1,106 @@
+.post {
+    display: table-cell;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    background-color: #f7efed;
+  }
+
+  .post .card .photo {
+    height: 340px;
+    width: 340px;
+    border-radius: 10px 10px 10px 10px;
+  }
+
+.card {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px 10px 10px 10px;
+    height: 340px;
+    width: 340px;
+    margin: 10px 15px;
+    border: 1px solid rgb(138, 132, 132);
+    z-index: 1;
+  }
+
+  .shadow {
+    position: absolute;
+    margin-top: 80px;
+    height: 180px;
+    width: 338px;
+    background: linear-gradient(top, transparent, #000);
+    border-radius: 0 0 10px 10px;
+    opacity: 0;
+    transition: 0.7s;
+    z-index: 2;
+  }
+
+  .post .user {
+    margin-top: 8px;
+    margin-left: 15px;
+}
+
+.user {
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+}
+
+.user .ava {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    object-fit: cover;
+    border: 1px solid rgb(29, 28, 28);
+}
+
+.min {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 250px;
+    margin-right: 40px;
+    opacity: 0;
+    transition: 0.7s;
+    z-index: 3;
+}
+
+.min p {
+    margin-bottom: 8px;
+    color: white;
+}
+
+.min .ava {
+    width: 45px;
+    height: 45px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.min div {
+    margin-left: 15px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.min .like {
+    margin-left: 130px;
+}
+
+.card:hover .min {
+    opacity: 1;
+    transition: 0.7s;
+}
+
+.card:hover .shadow {
+    opacity: .42;
+    transition: 0.7s;
+}

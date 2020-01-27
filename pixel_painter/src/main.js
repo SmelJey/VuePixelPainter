@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+import VueCookies from 'vue-cookies'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import VueCarousel from 'vue-carousel'
@@ -16,28 +17,51 @@ import './../node_modules/bulma/css/bulma.css'
 Vue.use(VueCarousel);
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VueCookies);
 
 const store = () => new Vuex.Store({
   state: {
-    token: ''
+    username: 'guest',
+    cards: [
+      {description: '1'},
+      {description: '2'},
+      {description: '3'},
+      {description: '4'},
+      {description: '5'},
+      {description: '6'},
+      {description: '7'},
+      {description: '8'},
+      {description: '9'},
+      {description: '10'},
+      {description: '11'},
+      {description: '12'},
+      {description: '13'},
+      {description: '14'},
+      {description: '15'},
+      {description: '16'},
+      {description: '17'},
+    ]
   },
   getters: {
-    getToken: state => {
-      return state.token
+    getUsername: state => {
+      return state.username;
+    },
+    DATA: state => {
+      return state.cards
     }
   },
   mutations: {
-    setToken (state, token) {
-      state.token = token
-    }
+    setUsername (state, username) {
+      state.username = username
+    } 
   }
 });
 
 const router = new VueRouter({
   routes: [
-    { path: '/', name: 'Auth', component: Auth },
-    { path: '/home', name: 'Home', component: Home },
-    { path: '/profile', name: 'Profile', component: Profile },
+    { path: '/auth', name: 'Auth', component: Auth },
+    { path: '/', name: 'Home', component: Home },
+    { path: '/profile', component: Profile, props: (route) => ({ id: route.query.id }) },
     { path: '/painter', name: 'Painter', component: Painter}
   ], 
   mode: 'history'

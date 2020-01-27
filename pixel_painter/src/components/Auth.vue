@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="auth">
 		<div v-if="showModal" class="modal is-active">
 			<div v-on:click="closeModal()" class="modal-background"></div>
 			<div class="modal-card">
@@ -44,23 +44,23 @@
 		</div>
 
 		<div class="columns">
-			<div class="column is-two-thirds is-hidden-mobile is-widescreen">
+			<div id="carousel" class="column is-two-thirds is-hidden-mobile is-widescreen">
 				<carousel :autoplay="true" :perPage="1" :paginationEnabled="true" :paginationPosition="'bottom-overlay'" :loop="true">
 					<slide>
 						<figure class="image is-640x640">
-							<img class="carousel_item" src='../assets/main_logo.png'>
+							<img class="carousel_item" src='https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/134161196/original/f3c5bca081b9a7413c4e2e187c854a8046923e36/make-a-16x16-pixel-art.png'>
 						</figure>
 					</slide>
 					<slide>
 						<figure class="image is-640x640">
-							<img class="carousel_item" src='../assets/main_logo.png'>
+							<img class="carousel_item" src='http://www.photonstorm.com/wp-content/uploads/2011/09/step4.gif'>
 						</figure>
 					</slide>
 				</carousel>
 			</div>
 			<div id="register" class="column">
-				<div class="field">
-					<figure class="image is-1980x1080">
+				<div id="logoback" class="field">
+					<figure id="logo" class="image is-1980x1080">
 						<img src='../assets/main_logo.png'>
 					</figure>
 				</div>
@@ -106,7 +106,7 @@
 			'Access-Control-Allow-Origin': 'http://localhost:8080/',
 			'allow_origins' : 'http://localhost:8080/'
 		}
-	})
+	});
 
 	import { Carousel, Slide } from 'vue-carousel'
 	export default {
@@ -126,10 +126,15 @@
 		methods: {
 			openModal: function() {
 				this.showModal = true;
+				this.inputUsername = '';
+				this.inputPassword = '';
+				this.inputEmail = '';
 				this.haveError = false;
 			},
 			closeModal: function() {
 				this.showModal = false;
+				this.inputUsername = '';
+				this.inputPassword = '';
 				this.haveError = false;
 			},
 			register: function() {
@@ -150,6 +155,7 @@
 							.then((response) => {
 								if (response.data["status"] === "OK"){
 									this.$store.commit('setToken', response.data['token']);
+									this.$store.commit('setUsername', this.inputUsername);
 									this.showModal = false;
 								} else {
 									this.haveError = true;
@@ -179,7 +185,8 @@
 							+ '&password=' + this.inputPassword)
 						.then((response) => {
 							if (response.data["status"] === "OK"){
-								this.$store.commit('setToken', response.data['token']);
+								this.$cookies.set('token', response.data['token'], 3600);
+								this.$cookies.set('login', this.inputUsername, 3600);
 								this.$router.push({name: 'Home'});
 							} else {
 								this.haveError = true;
@@ -200,24 +207,43 @@
 </script>
 
 <style scoped>
-.button {
-	margin-top: 10px
+
+#logo {
+	padding-top: 20px;
+	padding-right: 15px;
+	padding-left: 20px;
+	padding-bottom: 20px;
 }
+
+.button {
+	margin-top: 10px;
+}
+
 .carousel_item{
 	min-height: 100vh;
 	max-height: 100vh;
 }
-.columns{
-	min-height: 100vh;
-	max-height: 100vh;
+
+.field {
+	margin-left: 10px;
+	margin-top: 10px;
+	margin-right: 20px;
 }
 
-#auth{
-	min-height: 100vh;
-	max-height: 100vh;
+#carousel {
+	padding-right: 0px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
 }
+
+#logoback {
+	margin: 0px 0px 0px 0px;
+	background-color: #fe6e4b;
+	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.45);
+}
+
 #register{
-	margin-top: 10px;
-	max-height: 100vh - 10px;
+	padding: 0px 0px 0px 0px;
+	height: 100%;
 }
 </style>
