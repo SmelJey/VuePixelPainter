@@ -301,6 +301,29 @@ export default {
 
 <style scoped>
 @import '../styles/Main.css';
+.title {
+  margin-top: 10px;
+}
+
+.section {
+	background-color: #f7efed;
+}
+
+canvas {
+	height: 200px; 
+	width: 200px;
+	border: 10px solid;
+ }
+
+.container {
+	margin: 5px 5px 5px 5px;
+}
+
+.shadow {
+	height: 25px;
+}
+</style>
+@import '../styles/Main.css';
 
 #changeProfileButton {
 	font-family: "Bookman";
