@@ -184,47 +184,49 @@ export default {
 				}
 			}
         },
-		requestMeta(){
-			if (this.$cookies.get('token') !== null){
-				console.log("requested");
+		requestMeta() {
+			console.log("requested");
 
-				Axios.get('http://localhost:8080/account/check_token?token=' + this.$cookies.get('token'))
-					.then((response) => {
-						if (response.data['status'] !== 'OK') {
-							this.isSelf = false;
-						}
-					});
+			Axios.get('http://localhost:8080/account/check_token?token=' + this.$cookies.get('token'))
+				.then((response) => {
+					let req = 'token=' + this.$cookies.get('token');
+					if (response.data['status'] !== 'OK') {
+						this.isSelf = false;
+						req = 'login=' + this.id;
+					}
+					Axios.get('http://localhost:8080/account/get?' + req)
+							.then((response) => {
+								console.log(response.data);
+								if (response.data['status'] === 'OK') {
+									this.accountName = response.data['login'];
+									this.accountMeta = response.data;
 
-				Axios.get('http://localhost:8080/account/get?login=' + this.id)
-					.then((response) => {
-						console.log(response.data);
-						if (response.data['status'] === 'OK') {
-							this.accountName = response.data['login'];
-							this.accountMeta = response.data;
-
-							for (let i in response.data) {
-								if (Object.prototype.hasOwnProperty.call(response.data, i)) {
-									this.accountMeta[i] = response.data[i];
-									this.newMeta[i] = this.accountMeta[i];
+									for (let i in response.data) {
+										if (Object.prototype.hasOwnProperty.call(response.data, i)) {
+											this.accountMeta[i] = response.data[i];
+											this.newMeta[i] = this.accountMeta[i];
+										}
+									}
+									this.likesCount = this.newMeta['likes'];
+									if (this.$cookies.get('login') != null
+											&& this.accountName === this.$cookies.get('login')){
+										this.isSelf = true;
+									}
+									console.log(this.newMeta);
+								} else if (response.data['status'] === 'INVALID_TOKEN') {
+									this.$router.push({name: 'Auth'})
+								} else if (response.data['status'] === 'INVALID_LOGIN') {
+									this.isInvalid = true;
 								}
-							}
-							this.likesCount = this.newMeta['likes'];
-							if (this.$cookies.get('login') != null
-									&& this.accountName === this.$cookies.get('login')){
-								this.isSelf = true;
-							}
-							console.log(this.newMeta);
-						} else if (response.data['status'] === 'INVALID_TOKEN') {
-							this.$router.push({name: 'Auth'})
-						} else if (response.data['status'] === 'INVALID_LOGIN') {
-							this.isInvalid = true;
-						}
-					}).catch((error) => {
-						console.log(error);
-					})
-			} else {
-				this.isSelf = false;
-			}
+							}).catch((error) => {
+								console.log(error);
+							})
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+
+
 		},
 		saveMeta() {
 			console.log(this.newMeta);
@@ -293,7 +295,6 @@ export default {
 	},
     mounted() {
 		this.requestMeta();
-		console.log(2);
 	}	
 
 }
