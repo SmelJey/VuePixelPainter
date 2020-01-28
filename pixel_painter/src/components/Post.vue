@@ -51,7 +51,7 @@
                     .then((response) => {
                         console.log(response);
                         if (response.data['status'] === 'INVALID_TOKEN') {
-                            this.$router.push({ name: 'Auth' });
+                            this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                         this.$emit('like');
                     })

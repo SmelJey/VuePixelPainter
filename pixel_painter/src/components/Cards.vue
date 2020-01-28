@@ -52,6 +52,21 @@
             }
         },
         methods: {
+            proceedResponse(response) {
+                let list = [];
+                for (let i = 0; i < response.data["items"].length; ++i) {
+                    list.push({
+                        id: response.data["items"][i].art_id,
+                        url: response.data["items"][i].data,
+                        owner: response.data["items"][i].owner_name,
+                        isLiked: response.data['items'][i].tokenLikedIt,
+                        likes: response.data['items'][i].likes,
+                        innerId: response.data['items'][i].art_id + response.data['items'][i].likes * 10000
+                    });
+                }
+                console.log(list);
+                return list;
+            },
             updateImages() {
                 this.$emit('like');
                 console.log('updated');
@@ -59,25 +74,14 @@
                     this.request +'&offset=0' + '&count=' + this.numberOfPic)
                     .then((response) => {
                         console.log(response.data);
-                        let list = [];
                         if (response.data["status"] === "OK") {
-                            for (let i = 0; i < response.data["items"].length; ++i) {
-                                list.push({
-                                    id: response.data["items"][i].art_id,
-                                    url: response.data["items"][i].data,
-                                    owner: response.data["items"][i].owner_name,
-                                    isLiked: response.data['items'][i].tokenLikedIt,
-                                    likes: response.data['items'][i].likes,
-                                    innerId: response.data['items'][i].art_id + response.data['items'][i].likes * 10000
-                                });
-                            }
-                            console.log(list);
+                            let list = this.proceedResponse(response);
                             this.loadedPic = response.data["items"].length;
                             this.imageList = list;
                             this.imageList.sort((a, b) => b.id - a.id);
                             console.log(this.imageList);
                         } else {
-                            this.$router.push({name: 'Auth'})
+                            this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
                     .catch((error) => {
@@ -92,26 +96,15 @@
                     this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic)
                     .then((response) => {
                         console.log(response.data);
-                        let list = [];
                         if (response.data["status"] === "OK") {
-                            for (let i = 0; i < response.data["items"].length; ++i) {
-                                list.push({
-                                    id: response.data["items"][i].art_id,
-                                    url: response.data["items"][i].data,
-                                    owner: response.data["items"][i].owner_name,
-                                    isLiked: response.data['items'][i].tokenLikedIt,
-                                    likes: response.data['items'][i].likes,
-                                    innerId: response.data['items'][i].art_id + response.data['items'][i].likes * 10000
-                                });
-                            }
-                            console.log(list);
+                            let list = this.proceedResponse(response);
                             this.loadedPic = response.data["items"].length;
                             this.offset += this.loadedPic;
                             this.imageList.push.apply(this.imageList, list);
                             this.imageList.sort((a, b) => b.id - a.id);
                             console.log(this.imageList);
                         } else {
-                            this.$router.push({name: 'Auth'})
+                            this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
                     .catch((error) => {

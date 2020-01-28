@@ -216,10 +216,7 @@
 <style scoped>
 
 #logo {
-	padding-top: 20px;
-	padding-right: 15px;
-	padding-left: 20px;
-	padding-bottom: 20px;
+	padding: 20px 15px 20px 20px;
 }
 
 .button {
