@@ -1,7 +1,7 @@
 <template>
     <div class="post">
         <div class="card">
-            <img class="photo" height="340px" width="340" :src="this.url"/>
+            <canvas :id="this.artId" class="photo" height="16" width="16"/>
             <div class="shadow"/>
             <div class="user">
                 <div class="min">
@@ -63,7 +63,7 @@ export default {
             this.$router.push('/profile?id=' + this.authorName)
         },
         drawImage () {
-            let canvas = document.getElementById("picture").getContext('2d');
+            let canvas = document.getElementById(this.artId).getContext('2d');
             let image = new Image(16, 16);
             image.src = this.url;
             image.onload = function() {
@@ -73,7 +73,7 @@ export default {
     },
     mounted() {
         console.log(this);
-        // this.drawImage();
+        this.drawImage();
     }
 }
 </script>
