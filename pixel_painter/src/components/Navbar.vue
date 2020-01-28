@@ -43,7 +43,7 @@ export default {
                     })
 
             } else {
-                this.$router.push({name: 'Auth'})
+                this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
             }
         },
         goToRedactor () {

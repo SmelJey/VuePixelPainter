@@ -164,7 +164,7 @@ export default {
 									this.imageList.push.apply(this.imageList, list);
 									this.drawImageOnCanvas();
 								} else {
-									this.$router.push({name: 'Auth'})
+									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
 								}
 							})
 							.catch((error) => {
@@ -214,7 +214,7 @@ export default {
 									}
 									console.log(this.newMeta);
 								} else if (response.data['status'] === 'INVALID_TOKEN') {
-									this.$router.push({name: 'Auth'})
+									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
 								} else if (response.data['status'] === 'INVALID_LOGIN') {
 									this.isInvalid = true;
 								}
@@ -239,7 +239,7 @@ export default {
 						console.log(response.data);
 						if (response.data['status'] === 'INVALID_TOKEN') {
 							if (this.$router.currentRoute.name !== 'Auth')
-								this.$router.push({name: 'Auth'})
+								this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
 						}
 						this.requestMeta();
 						if (response.data['status'] === 'OK') {
@@ -262,7 +262,7 @@ export default {
 					} else {
 						this.error = "";
 						if (this.$router.currentRoute.name !== 'Auth')
-							this.$router.push({name: 'Auth'})
+							this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
 					}
 				}).catch((error) => {
 					console.log(error);
@@ -278,7 +278,7 @@ export default {
 						} else {
 							this.error = "";
 							if (this.$router.currentRoute.name !== 'Auth')
-								this.$router.push({name: 'Auth'})
+								this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
 						}
 					}).catch((error) => {
 				console.log(error);

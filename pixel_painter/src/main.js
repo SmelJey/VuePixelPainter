@@ -59,9 +59,9 @@ const store = () => new Vuex.Store({
 
 const router = new VueRouter({
   routes: [
-    { path: '/auth', name: 'Auth', component: Auth },
+    { path: '/auth', name: 'Auth', component: Auth, props: (route) => ({ cb: route.query.cb }) },
     { path: '/', name: 'Home', component: Home },
-    { path: '/profile', component: Profile, props: (route) => ({ id: route.query.id }) },
+    { path: '/profile', name: 'Profile', component: Profile, props: (route) => ({ id: route.query.id }) },
     { path: '/painter', name: 'Painter', component: Painter}
   ], 
   mode: 'history'
