@@ -1,22 +1,21 @@
 <template>
     <div class="main">
         <Navbar/>
-        <Cards/>
+        <Cards :request="'/get?token=' + this.$cookies.get('token')"  />
     </div>   
 </template>
 
 <script>
-import Navbar from './Navbar.vue'
-import Cards from './Cards.vue'
+    import Navbar from './Navbar.vue'
+    import Cards from './Cards.vue'
 
-export default {
-    name: 'Home',
-    components: {
-        Navbar,
-        Cards
-    },
-
-}
+    export default {
+        name: 'Home',
+        components: {
+            Navbar,
+            Cards
+        },
+    }
 </script>
 
 <style scoped>
