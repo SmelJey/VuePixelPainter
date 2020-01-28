@@ -1,12 +1,14 @@
 <template>
     <div class="feed">
         <Post v-for="card in getImages"
-              :key="card.id"
+              :key="card.innerId"
               :art-id="card.id"
               :author-name="card.owner"
               :url="card.url"
               :likes="card.likes"
-              :is-liked="card.isLiked">
+              :is-liked="card.isLiked"
+              :is-req="isRequired"
+              v-on:like="updateImages()">
         </Post>
     </div>
 </template>
@@ -39,7 +41,7 @@ export default {
             numberOfPic: 50,
             loadedPic: 0,
             imageList: [],
-            isRequired: false
+            isRequired: false,
         }
     },
     computed: {
@@ -52,7 +54,41 @@ export default {
         }
     },
     methods: {
+        updateImages() {
+            console.log('updated');
+            axios.post(
+                '/get?'+'offset=0' + '&count=' + this.numberOfPic + '&token=' + this.$cookies.get('token'))
+                .then((response) => {
+                    console.log(response.data);
+                    let list = [];
+                    if (response.data["status"] === "OK") {
+                        for (let i = 0; i < response.data["items"].length; ++i) {
+                            list.push({
+                                id: response.data["items"][i].art_id,
+                                url: response.data["items"][i].data,
+                                owner: response.data["items"][i].owner_name,
+                                isLiked: response.data['items'][i].tokenLikedIt,
+                                likes: response.data['items'][i].likes,
+                                innerId: response.data['items'][i].art_id + response.data['items'][i].likes * 10000
+                            });
+                        }
+                        console.log(list);
+                        this.loadedPic = response.data["items"].length;
+                        this.imageList = list;
+                        this.imageList.sort((a, b) => b.id - a.id);
+                        console.log(this.imageList);
+                    } else {
+                        this.$router.push({name: 'Auth'})
+                    }
+                })
+                .catch((error) => {
+                    this.isRequired = false;
+                    console.log(error);
+                });
+            this.isRequired = true;
+        },
         requestImages() {
+            console.log('requested');
             axios.post(
                 '/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic + '&token=' + this.$cookies.get('token'))
                 .then((response) => {
@@ -65,13 +101,16 @@ export default {
                                 url: response.data["items"][i].data,
                                 owner: response.data["items"][i].owner_name,
                                 isLiked: response.data['items'][i].tokenLikedIt,
-                                likes: response.data['items'][i].likes
+                                likes: response.data['items'][i].likes,
+                                innerId: response.data['items'][i].art_id + response.data['items'][i].likes * 10000
                             });
                         }
                         console.log(list);
                         this.loadedPic = response.data["items"].length;
                         this.offset += this.loadedPic;
                         this.imageList.push.apply(this.imageList, list);
+                        this.imageList.sort((a, b) => b.id - a.id);
+                        console.log(this.imageList);
                     } else {
                         this.$router.push({name: 'Auth'})
                     }

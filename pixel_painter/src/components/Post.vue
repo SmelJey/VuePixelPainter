@@ -10,7 +10,10 @@
                         <a><p v-on:click="goToProfile()">Andrey</p></a>
                     </div>
                     <div class="like">
-                        <a><img src="../assets/icons/like.png" height="25px" width="25px" v-on:click="clickLike()"/></a>
+                        <a>
+                            <img v-if="!isLiked" src="../assets/icons/like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                            <img v-if="isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -36,34 +39,25 @@ export default {
         url: String,
         authorName: String,
         likes: Number,
-        isLiked: Boolean
+        isLiked: Boolean,
+        isReq: Boolean
     },
     methods: {
         clickLike() {
-            if (this.isLiked) {
-                axios.post('/remove?art_id=' + this.artId + '&token=' + this.$cookies.get('token'))
+            let operation = '/add?';
+            if (this.isLiked)
+                operation = '/remove?';
+                axios.post(operation + 'art_id=' + this.artId + '&token=' + this.$cookies.get('token'))
                 .then((response) => {
                     console.log(response);
                     if (response.data['status'] === 'INVALID_TOKEN') {
                         this.$router.push({ name: 'Auth' });
-                    }// else if (response.data['status'] === 'OK') {
-                        // this.isLiked = false
-                    //}
+                    }
+                    this.$emit('like');
                 })
                 .catch((error) => {
                     console.log(error);
-                })
-            } else {
-                axios.post('/add?art_id=' + this.artId + '&token=' + this.$cookies.get('token'))
-                .then((response) => {
-                    console.log(response);
-                    if (response.data['status'] === 'INVALID_TOKEN') {
-                        this.$router.push({ name: 'Auth' });
-                    }// else if (response.data['status'] === 'OK') {
-                        // this.isLiked = true;
-                    //}
-                })
-            }
+                });
         },
         goToProfile () {
             this.$router.push('/profile?id=' + this.authorName)
