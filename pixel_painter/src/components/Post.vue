@@ -7,7 +7,7 @@
                 <div class="min">
                     <a><img class="ava" @click="goToProfile()" src="../assets/test/ava.jpg"/></a>
                     <div>
-                        <a><p v-on:click="goToProfile()">Andrey</p></a>
+                        <a><p v-on:click="goToProfile()">{{ this.authorName }}</p></a>
                     </div>
                     <div class="like">
                         <a>
