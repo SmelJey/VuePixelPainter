@@ -2,7 +2,7 @@
 	<div class="main">
 		<Navbar/>
 		<div class="shadow"></div>
-		<div class="modal is-active" v-if="showModal">
+		<div class="modal is-active" v-if="false">
 			<div class="modal-background"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
@@ -19,11 +19,15 @@
 						<input id="pswd" class="input is-fullwidth lvl-input" type="password" placeholder="Password" v-model="newMeta['password']"/>
 						<button class="button is-success is-fullwidth-mobile lvl-input" v-on:click="changePass">Change password</button>
 					</div>
-
-					<input id="fname" class="input" type="text" placeholder="First Name"  v-model="newMeta['first_name']"/>
+					<p class=" names">Имя</p>
+					<input id="fname" class="input not-lvl" type="text" placeholder="First Name"  v-model="newMeta['first_name']"/>
+					<p class=" names">Фамилия</p>
 					<input id="sname" class="input not-lvl" type="text" placeholder="Second Name" v-model="newMeta['second_name']"/>
+					<p class=" names">Возвраст</p>
 					<input id="age" class="input not-lvl" type="text" placeholder="Age" v-model="newMeta['age']"/>
+					<p class=" names">Страна</p>
 					<input id="country" class="input not-lvl" type="text" placeholder="Country" v-model="newMeta['country']"/>
+					<p class=" names">VK</p>
 					<input id="vk" class="input not-lvl" type="text" placeholder="VK" v-model="newMeta['vk_profile']"/>
 				</section>
 				<footer class="modal-card-foot">
@@ -32,6 +36,26 @@
 				</footer>
 			</div>
 		</div>
+		
+		<div class="modal is-active" v-if="showModal">
+			<div class="modal-background"></div>
+			<div class="modal-card">
+				<header class="modal-card-head">
+					<p class="modal-card-title">ShowGalleryModal</p>
+					<button class="delete" aria-label="close" v-on:click="closeModal"></button>
+				</header>
+				<section class="modal-card-body is-paddingless">
+					<canvas class="is-marginless" style="width: 100%; height: 100%;" width="16" height="16" id="canvas">
+                    </canvas>
+                    <buttom class="button ">
+						<span class="icon is-small">
+							<i class="fas fa-bold"></i>
+						</span>
+					</buttom>
+				</section>
+			</div>
+		</div>
+
 		<section class="hero" v-if="!isInvalid">
 			<div class="hero-body">
 				<div class="has-text-centered">
@@ -61,11 +85,11 @@
 				</div>
 			</div>
 			<div id="About" style="display:none;" class="content-tab">
-				<p class="subtitle mobile-text is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
-				<p class="subtitle mobile-text">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
-				<p class="subtitle mobile-text">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
-				<p class="subtitle mobile-text">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
-				<p class="subtitle mobile-text"><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? 'VK: ' + accountMeta['vk_profile'] : ''}}</a></p>
+				<p class="subtitle metainfo mobile-text is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
+				<p class="subtitle metainfo mobile-text">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
+				<p class="subtitle metainfo mobile-text">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
+				<p class="subtitle metainfo mobile-text">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
+				<p class="subtitle metainfo mobile-text"><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? 'VK: ' + accountMeta['vk_profile'] : ''}}</a></p>
 				<button id="changeProfileButton" class="button is-success" v-if="isSelf" v-on:click="showModal = true"> Change your personal information </button>
 			</div>
 		</div>
@@ -305,12 +329,6 @@ export default {
   margin-top: 10px;
 }
 
-canvas {
-	height: 200px; 
-	width: 200px;
-	border: 10px solid;
- }
-
 .container {
 	margin: 5px 5px 5px 5px;
 }
@@ -329,7 +347,7 @@ canvas {
 }
 
 .not-lvl {
-	margin-top: 30px;
+	margin-top: 15px;
 }
 
 .modal-card-title {
@@ -363,15 +381,16 @@ canvas {
   font-size: large;
 }
 
+.names {
+	font-size: medium;
+	text-align: left;
+	margin-top: 15px;
+	margin-left: 2px;	
+}
+
 .section {
 	background-color: #f7efed;
 }
-
-canvas {
-	height: 200px; 
-	width: 200px;
-	border: 10px solid;
- }
 
 .container {
 	margin: 5px 5px 5px 5px;
@@ -380,6 +399,17 @@ canvas {
 .shadow {
 	height: 25px;
 }
+
+.metainfo {
+	border-radius: 50px;
+	border: 10px, solid;
+	background-color: white;
+}
+
+canvas {
+	border: 10px solid;
+}
+
 
 a {
 	color: inherit;
