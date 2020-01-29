@@ -215,9 +215,9 @@
                     + '&is_private=false'
                     + '&token=' + this.$cookies.get('token'))
                     .then((response) => {
-                        console.log(response.data)
+                        console.log(response.data);
                         if (response.data['status'] === 'INVALID_TOKEN'){
-                            this.$router.push('auth');
+                            this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
                     .catch((error) => {

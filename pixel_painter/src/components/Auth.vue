@@ -113,6 +113,9 @@
 		name: 'Auth',
 		Carousel,
 		Slide,
+		props: {
+			cb: String
+		},
 		data: function() {
 			return {
 				inputEmail: '',
@@ -187,7 +190,11 @@
 							if (response.data["status"] === "OK"){
 								this.$cookies.set('token', response.data['token'], 3600);
 								this.$cookies.set('login', this.inputUsername, 3600);
-								this.$router.push({name: 'Home'});
+								if (this.cb != null) {
+									this.$router.push(this.cb);
+								} else {
+									this.$router.push({name: 'Home'});
+								}
 							} else {
 								this.haveError = true;
 								this.errorMessage = 'Incorrect login or password';
@@ -209,10 +216,7 @@
 <style scoped>
 
 #logo {
-	padding-top: 20px;
-	padding-right: 15px;
-	padding-left: 20px;
-	padding-bottom: 20px;
+	padding: 20px 15px 20px 20px;
 }
 
 .button {

@@ -2,7 +2,7 @@
 	<div class="main">
 		<Navbar/>
 		<div class="shadow"></div>
-		<div class="modal is-active" v-if="false">
+		<div class="modal is-active" v-if="showModal">
 			<div class="modal-background"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
@@ -37,7 +37,7 @@
 			</div>
 		</div>
 		
-		<div class="modal is-active" v-if="showModal">
+		<div class="modal is-active" v-if="false">
 			<div class="modal-background"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
@@ -77,12 +77,7 @@
 		</section>
 		<div class="box section" v-if="!isInvalid">
 			<div id="Gallery" class="content-tab">
-				<span class="container" v-for="image in getImages" v-bind:key="image.id">
-					<canvas :id="image.id" width="16" height="16"></canvas>
-				</span>
-				<div>
-					<button v-if="loadedPic === 50" v-on:click="isRequired = false" class="button">Load More</button>
-				</div>
+				<Cards :request="'/get?token=' + this.$cookies.get('token') + '&login=' + this.id" v-on:like="requestMeta()" />
 			</div>
 			<div id="About" style="display:none;" class="content-tab">
 				<p class="subtitle metainfo mobile-text is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
@@ -110,217 +105,249 @@
 		}
 	});
 
-import Navbar from './Navbar.vue'
-export default {
-	name: 'Profile',
-	components: {
-		Navbar
-	},
-	props: ['id'],
-    data: function(){
-        return {
-            accountPic: 'https://bulma.io/images/placeholders/128x128.png',
-            accountName: '',
-			isSelf: false,
-			isInvalid: false,
-            accountMeta: '',
-            isRequired: false,
-			currentTab: 'Gallery',
-			likesCount: 0,
-			newMeta: {
-				first_name: '',
-				second_name: '',
-				age: 0,
-				country: '',
-				vk_profile: ''
-			},
-			imageList: [],
-			offset: 0,
-            numberOfPic: 50,
-			showModal: false,
-			error: "",
-			reqCount: 0,
-            loadedPic: 0
-        }
-    },
-    computed: {
-        getImages() {
-			if (!this.isRequired) {
-				this.requestImages();
+	import Cards from './Cards.vue'
+	import Navbar from './Navbar.vue'
+	export default {
+		name: 'Profile',
+		components: {
+			Navbar,
+			Cards
+		},
+		props: ['id'],
+		data: function(){
+			return {
+				accountPic: 'https://bulma.io/images/placeholders/128x128.png',
+				accountName: '',
+				isSelf: false,
+				isInvalid: false,
+				accountMeta: '',
+				isRequired: false,
+				currentTab: 'Gallery',
+				likesCount: 0,
+				newMeta: {
+					first_name: '',
+					second_name: '',
+					age: 0,
+					country: '',
+					vk_profile: ''
+				},
+				imageList: [],
+				offset: 0,
+				numberOfPic: 50,
+				showModal: false,
+				error: "",
+				reqCount: 0,
+				loadedPic: 0
 			}
-            return this.imageList
-        }
-    },
-    methods: {
-		openTab(tabName) {
-			let i, x, tablinks;
-			x = document.getElementsByClassName("content-tab");
-			for (i = 0; i < x.length; i++) {
-				x[i].style.display = "none";
+		},
+		computed: {
+			getImages() {
+				if (!this.isRequired) {
+					this.requestImages();
+				}
+				return this.imageList
 			}
-			tablinks = document.getElementsByClassName("tab");
-			if (tabName !== this.currentTab) {
+		},
+		methods: {
+			openTab(tabName) {
+				let i, x, tablinks;
+				x = document.getElementsByClassName("content-tab");
 				for (i = 0; i < x.length; i++) {
-					if (tablinks[i].className.includes("is-active")) {
-						tablinks[i].className = tablinks[i].className.replace(" is-active", "");
-					} else {
-						tablinks[i].className += " is-active";
+					x[i].style.display = "none";
+				}
+				tablinks = document.getElementsByClassName("tab");
+				if (tabName !== this.currentTab) {
+					for (i = 0; i < x.length; i++) {
+						if (tablinks[i].className.includes("is-active")) {
+							tablinks[i].className = tablinks[i].className.replace(" is-active", "");
+						} else {
+							tablinks[i].className += " is-active";
+						}
 					}
 				}
-			}
-			this.currentTab = tabName;
+				this.currentTab = tabName;
 
-			document.getElementById(tabName).style.display = "block";
-		},
-		requestImages() {
-			axios.post(
-				'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
-					+ '&login=' + this.id + '&token=' + this.$cookies.get('token'))
-							.then((response) => {
-								console.log(response.data);
-								let list = [];
-								if (response.data["status"] === "OK") {
-									for (let i = 0; i < response.data["items"].length; ++i) {
-										list.push({id: i + this.offset, url: response.data["items"][i].data});
+				document.getElementById(tabName).style.display = "block";
+			},
+			requestImages() {
+				axios.post(
+					'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
+						+ '&login=' + this.id + '&token=' + this.$cookies.get('token'))
+								.then((response) => {
+									console.log(response.data);
+									let list = [];
+									if (response.data["status"] === "OK") {
+										for (let i = 0; i < response.data["items"].length; ++i) {
+											list.push({id: i + this.offset, url: response.data["items"][i].data});
+										}
+										this.loadedPic = response.data["items"].length;
+										this.offset += this.loadedPic;
+										this.imageList.push.apply(this.imageList, list);
+										this.drawImageOnCanvas();
+									} else {
+										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
 									}
-                                    this.loadedPic = response.data["items"].length;
-                                    this.offset += this.loadedPic;
-									this.imageList.push.apply(this.imageList, list);
-									this.drawImageOnCanvas();
-								} else {
-									this.$router.push({name: 'Auth'})
-								}
-							})
-							.catch((error) => {
-                                this.isRequired = false;
-								console.log(error);
-							});
-            this.isRequired = true;
-		},
-        drawImageOnCanvas() {
-			for (let i = 0; i < this.imageList.length; ++i) {
-				let item = this.imageList[i];
-				let canvas = document.getElementById(item.id).getContext('2d');
-				let image = new Image(16, 16);
-				image.src = item.url;
-				image.onload = function() {
-					canvas.drawImage(image, 0, 0)
+								})
+								.catch((error) => {
+									this.isRequired = false;
+									console.log(error);
+								});
+				this.isRequired = true;
+			},
+			drawImageOnCanvas() {
+				for (let i = 0; i < this.imageList.length; ++i) {
+					let item = this.imageList[i];
+					let canvas = document.getElementById(item.id).getContext('2d');
+					let image = new Image(16, 16);
+					image.src = item.url;
+					image.onload = function() {
+						canvas.drawImage(image, 0, 0)
+					}
 				}
-			}
-        },
-		requestMeta(){
-			if (this.$cookies.get('token') !== null){
+			},
+			requestMeta() {
 				console.log("requested");
 
 				Axios.get('http://localhost:8080/account/check_token?token=' + this.$cookies.get('token'))
 					.then((response) => {
-						if (response.data['status'] !== 'OK') {
+						let req = 'token=' + this.$cookies.get('token');
+						if (response.data['status'] !== 'OK' || this.$cookies.get('login') !== this.id) {
 							this.isSelf = false;
+							req = 'login=' + this.id;
 						}
+						Axios.get('http://localhost:8080/account/get?' + req)
+								.then((response) => {
+									console.log(response.data);
+									if (response.data['status'] === 'OK') {
+										this.accountName = response.data['login'];
+										this.accountMeta = response.data;
+
+										for (let i in response.data) {
+											if (i === 'status')
+												continue;
+											if (Object.prototype.hasOwnProperty.call(response.data, i)) {
+												this.accountMeta[i] = response.data[i];
+												this.newMeta[i] = this.accountMeta[i];
+											}
+										}
+										this.likesCount = this.newMeta['likes'];
+										if (this.$cookies.get('login') != null
+												&& this.accountName === this.$cookies.get('login')){
+											this.isSelf = true;
+										}
+										console.log(this.newMeta);
+									} else if (response.data['status'] === 'INVALID_TOKEN') {
+										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+									} else if (response.data['status'] === 'INVALID_LOGIN') {
+										this.isInvalid = true;
+									}
+								}).catch((error) => {
+									console.log(error);
+								})
+					})
+					.catch((error) => {
+						console.log(error);
 					});
 
-				Axios.get('http://localhost:8080/account/get?login=' + this.id)
+
+			},
+			saveMeta() {
+				console.log(this.newMeta);
+				let updatedMeta = [];
+				for (let item in this.newMeta) {
+					if (Object.prototype.hasOwnProperty.call(this.newMeta, item)) {
+						if (this.newMeta[item] === undefined ||  item === 'password' || item === 'likes'
+								|| item === 'email' || item === 'login' || this.newMeta[item] === "" || this.newMeta[item] === 0)
+							continue;
+
+						updatedMeta.push(item);
+					}
+
+				}
+
+				if (updatedMeta.length > 0) {
+					let req = 'http://localhost:8080/account/edit?&field=';
+					for (let i in updatedMeta) {
+						req += updatedMeta[i];
+						req += ',';
+					}
+					req = req.slice(0, -1);
+					req += '&value=';
+					for (let i in updatedMeta) {
+						req += this.newMeta[updatedMeta[i]];
+						req += ',';
+					}
+					req = req.slice(0, -1);
+					req += "&token=" + this.$cookies.get('token');
+
+					Axios.post(req)
+						.then((response) => {
+							console.log(response.data);
+							if (response.data['status'] === 'INVALID_TOKEN') {
+								if (this.$router.currentRoute.name !== 'Auth')
+									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+							}
+							this.requestMeta();
+							if (response.data['status'] === 'OK') {
+								this.showModal = false;
+							} else {
+								this.error = "Not all information was processed"
+							}
+
+						}).catch((error) => {
+							console.log(error);
+						});
+				}
+
+
+
+
+			},
+			changePass() {
+				Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
+					+ this.newMeta['password'] + '&token=' + this.$cookies.get('token'))
 					.then((response) => {
 						console.log(response.data);
-						if (response.data['status'] === 'OK') {
-							this.accountName = response.data['login'];
-							this.accountMeta = response.data;
-
-							for (let i in response.data) {
-								if (Object.prototype.hasOwnProperty.call(response.data, i)) {
-									this.accountMeta[i] = response.data[i];
-									this.newMeta[i] = this.accountMeta[i];
-								}
-							}
-							this.likesCount = this.newMeta['likes'];
-							if (this.$cookies.get('login') != null
-									&& this.accountName === this.$cookies.get('login')){
-								this.isSelf = true;
-							}
-							console.log(this.newMeta);
-						} else if (response.data['status'] === 'INVALID_TOKEN') {
-							this.$router.push({name: 'Auth'})
-						} else if (response.data['status'] === 'INVALID_LOGIN') {
-							this.isInvalid = true;
+						if (response.data['status'] === 'FAIL') {
+							this.error = "Incorrect pass"
+						} else {
+							this.error = "";
+							if (this.$router.currentRoute.name !== 'Auth')
+								this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
 						}
 					}).catch((error) => {
 						console.log(error);
 					})
-			} else {
-				this.isSelf = false;
-			}
-		},
-		saveMeta() {
-			console.log(this.newMeta);
-
-			Axios.post('http://localhost:8080/account/edit?&field=first_name,second_name,age,vk_profile,country'
-					+ "&value=" + this.newMeta["first_name"] + "," + this.newMeta["second_name"] + ","
-					+ this.newMeta["age"] + "," + this.newMeta["vk_profile"] + "," + this.newMeta["country"]
-					+ "&token=" + this.$cookies.get('token'))
-					.then((response) => {
-						console.log(response.data);
-						if (response.data['status'] === 'INVALID_TOKEN') {
-							if (this.$router.currentRoute.name !== 'Auth')
-								this.$router.push({name: 'Auth'})
-						}
-						this.requestMeta();
-						if (response.data['status'] === 'OK') {
-							this.showModal = false;
-						} else {
-							this.error = "Not all information was processed"
-						}
-
-					}).catch((error) => {
-						console.log(error);
-					});
-		},
-		changePass() {
-			Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
-				+ this.newMeta['password'] + '&token=' + this.$cookies.get('token'))
-				.then((response) => {
-					console.log(response.data);
-					if (response.data['status'] === 'FAIL') {
-						this.error = "Incorrect pass"
-					} else {
-						this.error = "";
-						if (this.$router.currentRoute.name !== 'Auth')
-							this.$router.push({name: 'Auth'})
-					}
-				}).catch((error) => {
+			},
+			changeEmail() {
+				Axios.post('http://localhost:8080/account/edit?&field=' + 'email' + '&value='
+						+ this.newMeta['email'] + '&token=' + this.$cookies.get('token'))
+						.then((response) => {
+							console.log(response.data);
+							if (response.data['status'] === 'FAIL') {
+								this.error = "Incorrect email"
+							} else {
+								this.error = "";
+								if (this.$router.currentRoute.name !== 'Auth')
+									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+							}
+						}).catch((error) => {
 					console.log(error);
 				})
-		},
-		changeEmail() {
-			Axios.post('http://localhost:8080/account/edit?&field=' + 'email' + '&value='
-					+ this.newMeta['email'] + '&token=' + this.$cookies.get('token'))
-					.then((response) => {
-						console.log(response.data);
-						if (response.data['status'] === 'FAIL') {
-							this.error = "Incorrect email"
-						} else {
-							this.error = "";
-							if (this.$router.currentRoute.name !== 'Auth')
-								this.$router.push({name: 'Auth'})
-						}
-					}).catch((error) => {
-				console.log(error);
-			})
-		},
-		closeModal() {
-			this.showModal = false;
-			for (let i in this.accountMeta) {
-				if (Object.prototype.hasOwnProperty.call(this.accountMeta, i)) {
-					this.newMeta[i] = this.accountMeta[i];
+			},
+			closeModal() {
+				this.showModal = false;
+				for (let i in this.accountMeta) {
+					if (Object.prototype.hasOwnProperty.call(this.accountMeta, i)) {
+						this.newMeta[i] = this.accountMeta[i];
+					}
 				}
 			}
+		},
+		mounted() {
+			this.requestMeta();
 		}
-	},
-    mounted() {
-		this.requestMeta();
-		console.log(2);
-	}	
-
-}
+	}
 </script>
 
 <style scoped>
