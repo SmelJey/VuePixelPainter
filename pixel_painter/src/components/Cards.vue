@@ -4,7 +4,7 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Art</p>
+                    <p class="modal-card-title specialFont">Art</p>
                     <button class="delete" aria-label="close" v-on:click="closeModal"></button>
                 </header>
                 <section class="modal-card-body is-paddingless" style="background-color: #f7efed;">
@@ -12,13 +12,13 @@
                     </canvas>
                 </section>
                 <footer v-if="showModal" class="modal-card-foot">
-                    <span style="font-weight: bold;">Author: </span>
+                    <span class="artAuthor" style="font-weight: bold;">Author: </span>
 					<span class="likeAuthor">
 						{{ this.imageList[this.modalIndx].owner }}
 					</span>
-                    <span class="has-text-right"> {{ this.imageList[this.modalIndx].likes }}</span>
+                    <span class="has-text-right mobile-text"> {{ this.imageList[this.modalIndx].likes }}</span>
                     <button class="likebutton" v-on:click="clickLike()">
-                        <img v-if="!this.imageList[this.modalIndx].isLiked" src="../assets/icons/like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                        <img v-if="!this.imageList[this.modalIndx].isLiked" src="../assets/icons/black_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
                         <img v-if="this.imageList[this.modalIndx].isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
                     </button>
                 </footer>
@@ -182,9 +182,21 @@
 <style scoped>
 @import '../styles/Cards.css';
 
+.artAuthor {
+    font-family: "PixelFont";
+    font-size: 30px;
+}
+
+.has-text-right {
+    margin-bottom: 4px;
+    margin-right: 3px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
 .likeAuthor {
     font-family: "Bookman";
-    font-size: large;
+    font-size: 30px;
     margin-bottom: 5px;
     width: 100%;
 }
@@ -195,5 +207,24 @@
     background: none;
     outline: none;
     margin-left: 5px;
+}
+
+@media screen and (max-width: 768px), print {
+    .has-text-right.mobile-text {
+        margin-bottom: 2px;
+        margin-right: 3px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .artAuthor {
+        font-family: "PixelFont";
+        font-size: large;
+        margin-bottom: 3px;
+    }
+    .likeAuthor {
+        font-family: "Bookman";
+        font-size: large;
+        width: 100%;
+    }  
 }
 </style>

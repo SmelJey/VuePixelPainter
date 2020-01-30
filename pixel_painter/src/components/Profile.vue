@@ -19,15 +19,15 @@
 						<input id="pswd" class="input is-fullwidth lvl-input" type="password" placeholder="Password" v-model="newMeta['password']"/>
 						<button class="button is-success is-fullwidth-mobile lvl-input" v-on:click="changePass">Change password</button>
 					</div>
-					<p class=" names">Имя</p>
+					<p class="names">First name</p>
 					<input id="fname" class="input not-lvl" type="text" placeholder="First Name"  v-model="newMeta['first_name']"/>
-					<p class=" names">Фамилия</p>
+					<p class="names">Second name</p>
 					<input id="sname" class="input not-lvl" type="text" placeholder="Second Name" v-model="newMeta['second_name']"/>
-					<p class=" names">Возвраст</p>
+					<p class="names">Age</p>
 					<input id="age" class="input not-lvl" type="text" placeholder="Age" v-model="newMeta['age']"/>
-					<p class=" names">Страна</p>
+					<p class="names">Country</p>
 					<input id="country" class="input not-lvl" type="text" placeholder="Country" v-model="newMeta['country']"/>
-					<p class=" names">VK</p>
+					<p class="names">VK</p>
 					<input id="vk" class="input not-lvl" type="text" placeholder="VK" v-model="newMeta['vk_profile']"/>
 				</section>
 				<footer class="modal-card-foot">
@@ -40,7 +40,7 @@
 		<section class="hero" v-if="!isInvalid">
 			<div class="hero-body">
 				<div class="has-text-centered">
-					<h1 class="title is-1"> Profile </h1>
+					<h1 class="title specialFont is-1"> Profile </h1>
 					<h2 class="subtitle is-2">
 						{{"@" + accountName}}
 					</h2>
@@ -61,11 +61,13 @@
 				<Cards :request="'/get?token=' + this.$cookies.get('token') + '&login=' + this.id" v-on:like="requestMeta()" />
 			</div>
 			<div id="About" style="display:none;" class="content-tab">
-				<p class="subtitle metainfo mobile-text is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
-				<p class="subtitle metainfo mobile-text">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
-				<p class="subtitle metainfo mobile-text">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
-				<p class="subtitle metainfo mobile-text">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
-				<p class="subtitle metainfo mobile-text"><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? 'VK: ' + accountMeta['vk_profile'] : ''}}</a></p>
+				<p class="subtitle mobile-text is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
+				<p class="subtitle mobile-text">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
+				<p class="subtitle mobile-text"><i class="fas fa-map-marker-alt"></i>{{ accountMeta['country'] ? accountMeta['country'] : 'Alien'}}</p>
+				<p class="subtitle specialFont mobile-text">Contact:</p>
+				<p class="subtitle mobile-text"><i class="fas fa-envelope"></i> {{ accountMeta['email'] ? accountMeta['email'] : 'Outerspace'}}</p>
+				
+				<p class="subtitle mobile-text"><i class="fab fa-vk"></i><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? accountMeta['vk_profile'] : ''}}</a></p>
 				<button class="button changeProfileButton mobile-text is-success" v-if="isSelf" v-on:click="showModal = true"> Change your personal information </button>
 			</div>
 		</div>
@@ -345,13 +347,6 @@
 <style scoped>
 @import '../styles/Main.css';
 
-@font-face {
-	font-family: 'PixelFont';
-	src: url('../assets/font/pixelfont.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-		url('../assets/font/pixelfont.ttf') format('truetype');
-
-}
-
 .title {
   margin-top: 10px;
 }
@@ -384,15 +379,35 @@
 }
 
 .subtitle.is-5 {
+	font-family: "Bookman";
+	font-weight: bold;
+	font-size: 30px;
+}
+
+.subtitle.is-2 {
+	font-family: "Bookman";
+	font-weight: bold;
+	font-size: 30px;
+}
+
+.fab {
+	margin-right: 10px;
+}
+
+.fas {
+	margin-right: 10px;
+}
+
+.subtitle.specialFont {
 	font-family: "PixelFont";
 	font-weight: bold;
 	font-size: 30px;
 }
 
 .subtitle {
-	font-family: "PixelFont";
+	font-family: "Bookman";
 	font-weight: bold;
-	font-size: 30px;
+	font-size: 25px;
 }
 
 .tab {
@@ -401,11 +416,11 @@
 	font-size: 30px;
 }
 
-.title {
+.title.specialFont {
   margin-top: 10px;
   font-family: "PixelFont";
   font-weight: bold;
-  font-size: 30px;
+  font-size: 40px;
 }
 
 .names {
@@ -425,6 +440,14 @@
 
 .shadow {
 	height: 25px;
+}
+
+.likebutton {
+	padding: 0;
+	border: none;
+	background: none;
+	outline: none;
+	margin-left: 5px;
 }
 
 a {
@@ -449,9 +472,12 @@ a:active {
 	}
 
 	.subtitle.mobile-text {
-		font-family: "PixelFont";
 		font-weight: bold;
 		font-size: large;
+	}
+	.subtitle.specialFont.mobile-text{
+		font-weight: bold;
+		font-size: 25px;
 	}
 
 	.changeProfileButton.mobile-text {
