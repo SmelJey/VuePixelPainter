@@ -126,7 +126,7 @@
                     { btnHandle: this.selectColor, color: "White", active: false }
                 ],
                 funcButton: [
-                    { btnHandle: this.selectColor, color: "White", active: false, text:"Erase" },
+                    { btnHandle: this.eraser, color: "White", active: false, text:"Erase" },
                     { btnHandle: this.clear, color: "White", active: false, text:"Clear" },
                     { btnHandle: this.load, color: "White", active: false, text:"Load from gallery" },
                     { btnHandle: this.publish, color: "White", active: false, text:"Publish" },
@@ -161,8 +161,11 @@
             }
         },
         methods: {
-            getColumn: function(column, container){
-                return container.filter((item, indx) => (indx % 2) == column);
+            eraser: function() {
+                let canvas = document.getElementById("canvas");
+                let ctx = canvas.getContext("2d");
+                ctx.globalCompositeOperation = "destination-out";
+                ctx.strokeStyle = "rgba(255,255,255,1)";
             },
             restorePainter: function() {
                 console.log(this.$store.getters.getPainterData);
@@ -181,14 +184,13 @@
             clear: function() {
                 let c = document.getElementById("canvas");
                 let ctx = c.getContext("2d");
-                ctx.fillStyle = "#FFFFFF";
-                ctx.fillRect(0, 0, 16, 16);
-                ctx.fillStyle = this.selectedColor;
+                ctx.clearRect(0, 0, 16, 16);
                 localStorage.setItem('painterData', c.toDataURL());
             },
             selectColor: function(color) {
                 let c = document.getElementById("canvas");
                 let ctx = c.getContext("2d");
+                ctx.globalCompositeOperation = "source-over";
                 this.selectedColor = color;
                 ctx.fillStyle = color;
             },

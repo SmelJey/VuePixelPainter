@@ -279,10 +279,6 @@
 							console.log(error);
 						});
 				}
-
-
-
-
 			},
 			changePass() {
 				Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
