@@ -37,30 +37,6 @@
 			</div>
 		</div>
 
-
-		
-		<div class="modal is-active" v-if="ShowGalleryModal">
-			<div class="modal-background"></div>
-			<div class="modal-card">
-				<header class="modal-card-head">
-					<p class="modal-card-title">ShowGalleryModal</p>
-					<button class="delete" aria-label="close" v-on:click="closeModal"></button>
-				</header>
-				<section class="modal-card-body is-paddingless" style="background-color: #f7efed;">
-					<canvas class="is-marginless" style="width: 100%; height: 100%;" width="16" height="16" id="canvas">
-                    </canvas>
-				</section>
-				<footer class="modal-card-foot">
-					<span class="likeAuthor">
-							{{accountName}}
-					</span>
-					<button class="likebutton"><img src="../assets/icons/fill_like.png" height="25px" width="25px"/></button>
-				</footer>
-			</div>
-		</div>
-
-
-
 		<section class="hero" v-if="!isInvalid">
 			<div class="hero-body">
 				<div class="has-text-centered">
@@ -140,7 +116,7 @@
 				offset: 0,
 				numberOfPic: 50,
 				showModal: false,
-				ShowGalleryModal: false,
+				ShowGalleryModal: true,
 				error: "",
 				reqCount: 0,
 				loadedPic: 0
@@ -359,13 +335,6 @@
 <style scoped>
 @import '../styles/Main.css';
 
-.likeAuthor {
-	font-family: "Bookman";
-	font-size: large;
-	margin-bottom: 5px;
-	width: 100%;
-}
-
 .title {
   margin-top: 10px;
 }
@@ -439,20 +408,6 @@
 
 .shadow {
 	height: 25px;
-}
-
-.metainfo {
-	border-radius: 50px;
-	border: 10px, solid;
-	background-color: white;
-}
-
-.likebutton {
-	padding: 0;
-	border: none;
-	background: none;
-	outline: none;
-	margin-left: 5px;
 }
 
 a {

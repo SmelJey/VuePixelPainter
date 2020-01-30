@@ -1,11 +1,11 @@
 <template>
     <div class="post">
         <div class="card">
-            <canvas :id="this.artId" class="photo" height="16" width="16"/>
-            <div class="shadow"/>
-            <div class="user">
+            <canvas :id="this.artId" v-on:click.self="pictureClick()" class="photo" height="16" width="16"/>
+            <div class="shadow" v-on:click.self="pictureClick()" />
+            <div class="user" v-on:click.self="pictureClick()">
                 <div class="min">
-                    <a><img class="ava" @click="goToProfile()" src="../assets/test/ava.jpg"/></a>
+                    <a><img class="ava" v-on:@click="goToProfile()" src="../assets/test/ava.jpg"/></a>
                     <div>
                         <a><p v-on:click="goToProfile()">{{ this.authorName }}</p></a>
                     </div>
@@ -59,8 +59,11 @@
                         console.log(error);
                     });
             },
+            pictureClick() {
+                this.$emit('picClick');
+            },
             goToProfile () {
-                this.$router.push('/profile?id=' + this.authorName)
+                this.$router.push('/profile?id=' + this.authorName);
             },
             drawImage () {
                 let canvas = document.getElementById(this.artId).getContext('2d');
