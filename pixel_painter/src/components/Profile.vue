@@ -37,30 +37,6 @@
 			</div>
 		</div>
 
-
-		
-		<div class="modal is-active" v-if="ShowGalleryModal">
-			<div class="modal-background"></div>
-			<div class="modal-card">
-				<header class="modal-card-head">
-					<p class="modal-card-title">ShowGalleryModal</p>
-					<button class="delete" aria-label="close" v-on:click="closeModal"></button>
-				</header>
-				<section class="modal-card-body is-paddingless" style="background-color: #f7efed;">
-					<canvas class="is-marginless" style="width: 100%; height: 100%;" width="16" height="16" id="canvas">
-                    </canvas>
-				</section>
-				<footer class="modal-card-foot">
-					<span class="likeAuthor">
-							{{accountName}}
-					</span>
-					<button class="likebutton"><img src="../assets/icons/fill_like.png" height="25px" width="25px"/></button>
-				</footer>
-			</div>
-		</div>
-
-
-
 		<section class="hero" v-if="!isInvalid">
 			<div class="hero-body">
 				<div class="has-text-centered">
@@ -140,7 +116,6 @@
 				offset: 0,
 				numberOfPic: 50,
 				showModal: false,
-				ShowGalleryModal: false,
 				error: "",
 				reqCount: 0,
 				loadedPic: 0
@@ -304,42 +279,46 @@
 							console.log(error);
 						});
 				}
-
-
-
-
 			},
 			changePass() {
-				Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
-					+ this.newMeta['password'] + '&token=' + this.$cookies.get('token'))
-					.then((response) => {
-						console.log(response.data);
-						if (response.data['status'] === 'FAIL') {
-							this.error = "Incorrect pass"
-						} else {
-							this.error = "";
-							if (this.$router.currentRoute.name !== 'Auth')
-								this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-						}
-					}).catch((error) => {
+				if (this.newMeta['password'] == null || this.newMeta['password'].length < 6) {
+					this.error = "Incorrect pass";
+				} else {
+					Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
+							+ this.newMeta['password'] + '&token=' + this.$cookies.get('token'))
+							.then((response) => {
+								console.log(response.data);
+								if (response.data['status'] === 'FAIL') {
+									this.error = "Incorrect pass"
+								} else {
+									this.error = "";
+									if (this.$router.currentRoute.name !== 'Auth')
+										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+								}
+							}).catch((error) => {
 						console.log(error);
 					})
+				}
 			},
 			changeEmail() {
-				Axios.post('http://localhost:8080/account/edit?&field=' + 'email' + '&value='
-						+ this.newMeta['email'] + '&token=' + this.$cookies.get('token'))
-						.then((response) => {
-							console.log(response.data);
-							if (response.data['status'] === 'FAIL') {
-								this.error = "Incorrect email"
-							} else {
-								this.error = "";
-								if (this.$router.currentRoute.name !== 'Auth')
-									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-							}
-						}).catch((error) => {
-					console.log(error);
-				})
+				if (this.newMeta['email'] == null) {
+					this.error = "Incorrect pass";
+				} else {
+					Axios.post('http://localhost:8080/account/edit?&field=' + 'email' + '&value='
+							+ this.newMeta['email'] + '&token=' + this.$cookies.get('token'))
+							.then((response) => {
+								console.log(response.data);
+								if (response.data['status'] === 'FAIL') {
+									this.error = "Incorrect email"
+								} else {
+									this.error = "";
+									if (this.$router.currentRoute.name !== 'Auth')
+										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+								}
+							}).catch((error) => {
+						console.log(error);
+					})
+				}
 			},
 			closeModal() {
 				this.showModal = false;
@@ -363,14 +342,7 @@
 	font-family: 'PixelFont';
 	src: url('../assets/font/pixelfont.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 		url('../assets/font/pixelfont.ttf') format('truetype');
-	
-}
 
-.likeAuthor {
-	font-family: "PixelFont";
-	font-size: large;
-	margin-bottom: 5px;
-	width: 100%;
 }
 
 .title {

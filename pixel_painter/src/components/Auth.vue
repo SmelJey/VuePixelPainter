@@ -61,7 +61,7 @@
 			<div id="register" class="column">
 				<div id="logoback" class="field">
 					<figure id="logo" class="image is-1980x1080">
-						<img src='../assets/main_logo.png'>
+						<router-link to="/"><img src='../assets/main_logo.png'></router-link>
 					</figure>
 				</div>
 				<div class="field">
@@ -191,6 +191,9 @@
 								this.$cookies.set('token', response.data['token'], 3600);
 								this.$cookies.set('login', this.inputUsername, 3600);
 								if (this.cb != null) {
+									if (this.cb === '/profile') {
+										this.cb = '/profile?id=' + this.inputUsername
+									}
 									this.$router.push(this.cb);
 								} else {
 									this.$router.push({name: 'Home'});

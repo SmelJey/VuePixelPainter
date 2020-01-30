@@ -1,6 +1,30 @@
 <template>
     <div class="feed">
-        <Post v-for="card in getImages"
+        <div class="modal is-active" v-show="showModal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Art</p>
+                    <button class="delete" aria-label="close" v-on:click="closeModal"></button>
+                </header>
+                <section class="modal-card-body is-paddingless" style="background-color: #f7efed;">
+                    <canvas id="modalCanvas" class="is-marginless" style="width: 100%; height: 100%;" width="16" height="16">
+                    </canvas>
+                </section>
+                <footer v-if="showModal" class="modal-card-foot">
+                    <span style="font-weight: bold;">Author: </span>
+					<span class="likeAuthor">
+						{{ this.imageList[this.modalIndx].owner }}
+					</span>
+                    <span class="has-text-right"> {{ this.imageList[this.modalIndx].likes }}</span>
+                    <button class="likebutton" v-on:click="clickLike()">
+                        <img v-if="!this.imageList[this.modalIndx].isLiked" src="../assets/icons/like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                        <img v-if="this.imageList[this.modalIndx].isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                    </button>
+                </footer>
+            </div>
+        </div>
+        <Post v-for="(card, indx) in getImages"
               :key="card.innerId"
               :art-id="card.id"
               :author-name="card.owner"
@@ -8,7 +32,8 @@
               :likes="card.likes"
               :is-liked="card.isLiked"
               :is-req="isRequired"
-              v-on:like="updateImages()">
+              v-on:like="updateImages()"
+              v-on:picClick="pictureClick(indx)">
         </Post>
     </div>
 </template>
@@ -40,6 +65,8 @@
                 loadedPic: 0,
                 imageList: [],
                 isRequired: false,
+                showModal: false,
+                modalIndx: -1
             }
         },
         computed: {
@@ -52,6 +79,38 @@
             }
         },
         methods: {
+            clickLike() {
+                let operation = '/add?';
+                if (this.imageList[this.modalIndx].isLiked)
+                    operation = '/remove?';
+                Axios.post('http://localhost:8080/likes' + operation + 'art_id=' + this.imageList[this.modalIndx].id + '&token=' + this.$cookies.get('token'))
+                    .then((response) => {
+                        console.log(response);
+                        if (response.data['status'] === 'INVALID_TOKEN') {
+                            this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
+                        }
+                        this.updateImages()
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            },
+            pictureClick(indx) {
+                console.log('click happened');
+                this.showModal = true;
+                this.modalIndx = indx;
+
+                let canvas = document.getElementById("modalCanvas");
+                let ctx = canvas.getContext("2d");
+
+                let img = new window.Image;
+                img.addEventListener("load", () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                });
+
+                img.setAttribute("src", this.imageList[this.modalIndx].url);
+            },
             proceedResponse(response) {
                 let list = [];
                 for (let i = 0; i < response.data["items"].length; ++i) {
@@ -66,6 +125,9 @@
                 }
                 console.log(list);
                 return list;
+            },
+            closeModal() {
+                this.showModal = false;
             },
             updateImages() {
                 this.$emit('like');
@@ -119,4 +181,19 @@
 
 <style scoped>
 @import '../styles/Cards.css';
+
+.likeAuthor {
+    font-family: "Bookman";
+    font-size: large;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.likebutton {
+    padding: 0;
+    border: none;
+    background: none;
+    outline: none;
+    margin-left: 5px;
+}
 </style>
