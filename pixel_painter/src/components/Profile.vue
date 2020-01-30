@@ -85,11 +85,11 @@
 				<Cards :request="'/get?token=' + this.$cookies.get('token') + '&login=' + this.id" v-on:like="requestMeta()" />
 			</div>
 			<div id="About" style="display:none;" class="content-tab">
-				<p class="subtitle metainfo mobile-text is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
-				<p class="subtitle metainfo mobile-text">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
-				<p class="subtitle metainfo mobile-text">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
-				<p class="subtitle metainfo mobile-text">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
-				<p class="subtitle metainfo mobile-text"><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? 'VK: ' + accountMeta['vk_profile'] : ''}}</a></p>
+				<p class="subtitle mobile-text is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
+				<p class="subtitle mobile-text">{{ accountMeta['age'] ? 'Age: ' + accountMeta['age'] : ''}}</p>
+				<p class="subtitle mobile-text">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
+				<p class="subtitle mobile-text">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
+				<p class="subtitle mobile-text"><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? 'VK: ' + accountMeta['vk_profile'] : ''}}</a></p>
 				<button class="button changeProfileButton mobile-text is-success" v-if="isSelf" v-on:click="showModal = true"> Change your personal information </button>
 			</div>
 		</div>
@@ -446,11 +446,6 @@
 
 .shadow {
 	height: 25px;
-}
-
-.metainfo {
-	border-radius: 50px;
-	border: 10px, solid;
 }
 
 .likebutton {
