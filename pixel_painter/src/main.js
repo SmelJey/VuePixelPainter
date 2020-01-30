@@ -19,43 +19,6 @@ Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookies);
 
-const store = () => new Vuex.Store({
-  state: {
-    username: 'guest',
-    cards: [
-      {description: '1'},
-      {description: '2'},
-      {description: '3'},
-      {description: '4'},
-      {description: '5'},
-      {description: '6'},
-      {description: '7'},
-      {description: '8'},
-      {description: '9'},
-      {description: '10'},
-      {description: '11'},
-      {description: '12'},
-      {description: '13'},
-      {description: '14'},
-      {description: '15'},
-      {description: '16'},
-      {description: '17'},
-    ]
-  },
-  getters: {
-    getUsername: state => {
-      return state.username;
-    },
-    DATA: state => {
-      return state.cards
-    }
-  },
-  mutations: {
-    setUsername (state, username) {
-      state.username = username
-    } 
-  }
-});
 
 const router = new VueRouter({
   routes: [
@@ -70,6 +33,5 @@ const router = new VueRouter({
 new Vue({
   el: '#app',
   router,
-  store,
   render: h => h(App)
 }).$mount('#app');

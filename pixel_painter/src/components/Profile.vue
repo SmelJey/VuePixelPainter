@@ -237,9 +237,14 @@
 				let updatedMeta = [];
 				for (let item in this.newMeta) {
 					if (Object.prototype.hasOwnProperty.call(this.newMeta, item)) {
-						if (this.newMeta[item] === undefined ||  item === 'password' || item === 'likes'
+						if (this.newMeta[item] === undefined ||  item === 'password' || item === 'likes' || item === 'status'
 								|| item === 'email' || item === 'login' || this.newMeta[item] === "" || this.newMeta[item] === 0)
 							continue;
+
+						if (item !== 'age' && this.newMeta[item].includes(',')) {
+							this.error = "Incorrect information";
+							return;
+						}
 
 						updatedMeta.push(item);
 					}
@@ -270,9 +275,10 @@
 							}
 							this.requestMeta();
 							if (response.data['status'] === 'OK') {
+								this.error = "";
 								this.showModal = false;
 							} else {
-								this.error = "Not all information was processed"
+								this.error = "Incorrect information"
 							}
 
 						}).catch((error) => {
@@ -321,6 +327,7 @@
 				}
 			},
 			closeModal() {
+				this.error = "";
 				this.showModal = false;
 				for (let i in this.accountMeta) {
 					if (Object.prototype.hasOwnProperty.call(this.accountMeta, i)) {

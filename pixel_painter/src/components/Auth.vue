@@ -148,7 +148,7 @@
 					this.errorMessage = 'Input email';
 					this.haveError = true;
 				} else if (this.inputPassword.length < 6) {
-					this.errorMessage = 'Password length must be more that 6 symbols';
+					this.errorMessage = 'Password length must be more that 6 characters';
 					this.haveError = true;
 				} else {
 					this.haveError = false;
@@ -156,13 +156,11 @@
 							+ '&password=' + this.inputPassword
 							+ '&email=' + this.inputEmail)
 							.then((response) => {
-								if (response.data["status"] === "OK"){
-									this.$store.commit('setToken', response.data['token']);
-									this.$store.commit('setUsername', this.inputUsername);
+								if (response.data["status"] === "OK") {
 									this.showModal = false;
 								} else {
 									this.haveError = true;
-									this.errorMessage = 'Choose another login';
+									this.errorMessage = 'Incorrect input';
 								}
 
 								console.log(response.data);
@@ -179,7 +177,7 @@
 					this.errorMessage = 'Input username';
 					this.haveError = true;
 				} else if (this.inputPassword.length < 6) {
-					this.errorMessage = 'Password length must be more that 6 symbols';
+					this.errorMessage = 'Password length must be more that 6 characters';
 					this.haveError = true;
 				} else {
 					this.haveError = false;
