@@ -49,7 +49,7 @@
                             :style="{'background-color': btn.color}"></button>
                 </div>
                 <div class="columns is-centered is-multiline">
-                    <canvas class="box" style="margin: 0 auto;" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
+                    <canvas class="box" style="margin: 0 auto; padding: 0;" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
                         v-on:touchstart="handleMouseDown" v-on:touchmove="handleMouseMove" v-on:touchend="handleMouseUp"
                         v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove" onload="restorePainter()">
                     </canvas>
@@ -125,9 +125,7 @@
                 funcButton: [
                     { btnHandle: this.eraser, color: "White", active: false, text:"Erase" },
                     { btnHandle: this.clear, color: "White", active: false, text:"Clear" },
-                    { btnHandle: this.load, color: "White", active: false, text:"Load from gallery" },
                     { btnHandle: this.publish, color: "White", active: false, text:"Publish" },
-                    { btnHandle: this.share, color: "White", active: false, text:"Share" }
                 ],
                 mouse: {
                     current: {
@@ -147,9 +145,11 @@
                 let c = document.getElementById("canvas");
                 let rect = c.getBoundingClientRect();
 
+                console.log("coords: " + (this.mouse.current.x - rect.left - window.pageXOffset) + " " + (this.mouse.current.y - rect.top - window.pageYOffset) )
+
                 return {
-                    x: (this.mouse.current.x - rect.left - 20) / 30,
-                    y: (this.mouse.current.y - rect.top - 20) / 30
+                    x: (this.mouse.current.x - rect.left - window.pageXOffset) / (rect.width / 16),
+                    y: (this.mouse.current.y - rect.top - window.pageYOffset) / (rect.height / 16)
                 }
             },
             saveLink: function(){
@@ -165,7 +165,6 @@
                 ctx.strokeStyle = "rgba(255,255,255,1)";
             },
             restorePainter: function() {
-                console.log(this.$store.getters.getPainterData);
                 let canvas = document.getElementById("canvas");
                 let ctx = canvas.getContext("2d");
 
@@ -254,6 +253,7 @@
                     ctx.fillStyle = this.selectedColor;
 
                     ctx.fillRect(Math.trunc(this.currentMouse.x), Math.trunc(this.currentMouse.y), 1, 1);
+                    console.log(this.currentMouse)
                 }
 
             },
