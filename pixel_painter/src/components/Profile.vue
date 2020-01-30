@@ -281,36 +281,44 @@
 				}
 			},
 			changePass() {
-				Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
-					+ this.newMeta['password'] + '&token=' + this.$cookies.get('token'))
-					.then((response) => {
-						console.log(response.data);
-						if (response.data['status'] === 'FAIL') {
-							this.error = "Incorrect pass"
-						} else {
-							this.error = "";
-							if (this.$router.currentRoute.name !== 'Auth')
-								this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-						}
-					}).catch((error) => {
+				if (this.newMeta['password'] == null || this.newMeta['password'].length < 6) {
+					this.error = "Incorrect pass";
+				} else {
+					Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
+							+ this.newMeta['password'] + '&token=' + this.$cookies.get('token'))
+							.then((response) => {
+								console.log(response.data);
+								if (response.data['status'] === 'FAIL') {
+									this.error = "Incorrect pass"
+								} else {
+									this.error = "";
+									if (this.$router.currentRoute.name !== 'Auth')
+										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+								}
+							}).catch((error) => {
 						console.log(error);
 					})
+				}
 			},
 			changeEmail() {
-				Axios.post('http://localhost:8080/account/edit?&field=' + 'email' + '&value='
-						+ this.newMeta['email'] + '&token=' + this.$cookies.get('token'))
-						.then((response) => {
-							console.log(response.data);
-							if (response.data['status'] === 'FAIL') {
-								this.error = "Incorrect email"
-							} else {
-								this.error = "";
-								if (this.$router.currentRoute.name !== 'Auth')
-									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-							}
-						}).catch((error) => {
-					console.log(error);
-				})
+				if (this.newMeta['email'] == null) {
+					this.error = "Incorrect pass";
+				} else {
+					Axios.post('http://localhost:8080/account/edit?&field=' + 'email' + '&value='
+							+ this.newMeta['email'] + '&token=' + this.$cookies.get('token'))
+							.then((response) => {
+								console.log(response.data);
+								if (response.data['status'] === 'FAIL') {
+									this.error = "Incorrect email"
+								} else {
+									this.error = "";
+									if (this.$router.currentRoute.name !== 'Auth')
+										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+								}
+							}).catch((error) => {
+						console.log(error);
+					})
+				}
 			},
 			closeModal() {
 				this.showModal = false;
