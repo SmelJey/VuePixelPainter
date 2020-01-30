@@ -6,7 +6,7 @@
 			<div class="modal-background"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
-					<p class="modal-card-title">Change personal information</p>
+					<p class="modal-card-title mobile-text">Change personal information</p>
 					<button class="delete" aria-label="close" v-on:click="closeModal"></button>
 				</header>
 				<section class="modal-card-body">
@@ -74,8 +74,8 @@
 			<div class="hero-foot">
 				<nav class="tabs is-boxed is-fullwidth">
 					<ul>
-						<li class="tab is-active" v-on:click="openTab('Gallery')"><a>Gallery</a></li>
-						<li class="tab" v-on:click="openTab('About')"><a>About</a></li>
+						<li class="tab mobile-text is-active" v-on:click="openTab('Gallery')"><a>Gallery</a></li>
+						<li class="tab mobile-text" v-on:click="openTab('About')"><a>About</a></li>
 					</ul>
 				</nav>
 			</div>
@@ -90,7 +90,7 @@
 				<p class="subtitle metainfo mobile-text">{{ accountMeta['email'] ? 'Email: ' + accountMeta['email'] : ''}}</p>
 				<p class="subtitle metainfo mobile-text">{{ accountMeta['country'] ? 'Country: ' + accountMeta['country'] : ''}}</p>
 				<p class="subtitle metainfo mobile-text"><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? 'VK: ' + accountMeta['vk_profile'] : ''}}</a></p>
-				<button id="changeProfileButton" class="button is-success" v-if="isSelf" v-on:click="showModal = true"> Change your personal information </button>
+				<button class="button changeProfileButton mobile-text is-success" v-if="isSelf" v-on:click="showModal = true"> Change your personal information </button>
 			</div>
 		</div>
 		<div class="section box" v-if="isInvalid">
@@ -359,8 +359,15 @@
 <style scoped>
 @import '../styles/Main.css';
 
+@font-face {
+	font-family: 'PixelFont';
+	src: url('../assets/font/pixelfont.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+		url('../assets/font/pixelfont.ttf') format('truetype');
+	
+}
+
 .likeAuthor {
-	font-family: "Bookman";
+	font-family: "PixelFont";
 	font-size: large;
 	margin-bottom: 5px;
 	width: 100%;
@@ -378,9 +385,9 @@
 	height: 25px;
 }
 
-#changeProfileButton {
-	font-family: "Bookman";
-	font-size: large;
+.changeProfileButton {
+	font-family: "PixelFont";
+	font-size: 20px;
 }
 
 #likes {
@@ -392,34 +399,34 @@
 }
 
 .modal-card-title {
-	font-family: "Bookman";
+	font-family: "PixelFont";
 	font-weight: bold;
-	font-size: large;
+	font-size: 30px;
 }
 
 .subtitle.is-5 {
-	font-family: "Bookman";
+	font-family: "PixelFont";
 	font-weight: bold;
-	font-size: 25px;
+	font-size: 30px;
 }
 
 .subtitle {
-	font-family: "Bookman";
+	font-family: "PixelFont";
 	font-weight: bold;
-	font-size: 25px;
+	font-size: 30px;
 }
 
 .tab {
-	font-family: "Bookman";
+	font-family: "PixelFont";
 	font-weight: bold;
-	font-size: large;
+	font-size: 30px;
 }
 
 .title {
   margin-top: 10px;
-  font-family: "Bookman";
+  font-family: "PixelFont";
   font-weight: bold;
-  font-size: large;
+  font-size: 30px;
 }
 
 .names {
@@ -444,7 +451,6 @@
 .metainfo {
 	border-radius: 50px;
 	border: 10px, solid;
-	background-color: white;
 }
 
 .likebutton {
@@ -477,8 +483,19 @@ a:active {
 	}
 
 	.subtitle.mobile-text {
-		font-family: "Bookman";
+		font-family: "PixelFont";
 		font-weight: bold;
+		font-size: large;
+	}
+
+	.changeProfileButton.mobile-text {
+		font-size: large;
+	}
+
+	.tab.mobile-text {
+		font-size: large;
+	}
+	.modal-card-title.mobile-text {
 		font-size: large;
 	}
 }
