@@ -61,7 +61,7 @@
 			<div id="register" class="column">
 				<div id="logoback" class="field">
 					<figure id="logo" class="image is-1980x1080">
-						<img src='../assets/main_logo.png'>
+						<router-link to="/"><img src='../assets/main_logo.png'></router-link>
 					</figure>
 				</div>
 				<div class="field">
