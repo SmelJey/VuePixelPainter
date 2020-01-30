@@ -145,8 +145,6 @@
                 let c = document.getElementById("canvas");
                 let rect = c.getBoundingClientRect();
 
-                console.log("coords: " + (this.mouse.current.x - rect.left - window.pageXOffset) + " " + (this.mouse.current.y - rect.top - window.pageYOffset) )
-
                 return {
                     x: (this.mouse.current.x - rect.left - window.pageXOffset) / (rect.width / 16),
                     y: (this.mouse.current.y - rect.top - window.pageYOffset) / (rect.height / 16)
@@ -204,23 +202,19 @@
                         link.href = URL.createObjectURL(blob);
                         link.download = label;
                         link.click()
-                    }).catch(error => console.error(error));
+                    });
             },
             publish: function() {
                 let c = document.getElementById('canvas');
-                console.log(this.$cookies.get('token'));
-                axios.post('/create?data=' + encodeURIComponent(c.toDataURL())
+                let req = '/create?data=' + encodeURIComponent(c.toDataURL())
                     + '&is_private=false'
-                    + '&token=' + this.$cookies.get('token'))
+                    + '&token=' + this.$cookies.get('token')
+                axios.post(req)
                     .then((response) => {
-                        console.log(response.data);
                         if (response.data['status'] === 'INVALID_TOKEN'){
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
-                    .catch((error) => {
-                        console.log(error)
-                    });
             },
             loadFromLink : function() {
                 testImage(this.loadFromURL, (url, res) => {
@@ -253,9 +247,7 @@
                     ctx.fillStyle = this.selectedColor;
 
                     ctx.fillRect(Math.trunc(this.currentMouse.x), Math.trunc(this.currentMouse.y), 1, 1);
-                    console.log(this.currentMouse)
                 }
-
             },
 
             handleMouseDown: function (event) {
