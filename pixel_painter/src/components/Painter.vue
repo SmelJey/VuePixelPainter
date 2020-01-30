@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <Navbar/>
-        <div class = "container is-fullwidth is-centered">
+        <div class ="container is-fullwidth is-centered">
             <div class="pixel-painter is-centered column"  id="pixel-painter">
                 <div class="modal is-active" v-if="showSaver">
                     <div class="modal-background"></div>
@@ -56,24 +56,21 @@
                 </div>
 
                 <div class="field is-multiline is-centered is-gapless">
-                    <button class="button" v-for="(btn, indx) in funcButton"
+                    <button class="button menu-button is-rounded" v-for="(btn, indx) in funcButton"
                             v-on:click="btn.btnHandle(btn.color)"
                             :key="indx"
                             :style="{'background-color': btn.color}">
                         {{btn.text}}
                     </button>
-                    <button class="button" v-on:click="showSaver = true">
+                    <button class="button menu-button is-rounded" v-on:click="showSaver = true">
                         Save
                     </button>
-                    <button class="button" v-on:click="showLoader = true">
+                    <button class="button menu-button is-rounded" v-on:click="showLoader = true">
                         Load from link
                     </button>
                 </div>
             </div>
-            <div class="column"></div>
-
         </div>
-
     </div>
 </template>
 
@@ -313,6 +310,21 @@
 <style>
 @import '../styles/Main.css';
 
+.button {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.button.menu-button {
+    font-size: large;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
 @media only screen and (min-width: 512px) {
     canvas {
         margin-top: 13px;
@@ -322,6 +334,7 @@
         image-rendering: -webkit-crisp-edges;
         image-rendering: pixelated;
         image-rendering: crisp-edges;
+        background-color: #f7efed;
     }
 }
 
@@ -334,9 +347,20 @@
         image-rendering: -webkit-crisp-edges;
         image-rendering: pixelated;
         image-rendering: crisp-edges;
+        background-color: #f7efed;
+    }
+
+    .button.menu-button {
+        font-family: "Bookman";
+        font-size: small;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    #pixel-painter {
+    background-color: #f7efed;
     }
 }
-
-
-
 </style>

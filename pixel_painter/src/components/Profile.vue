@@ -340,13 +340,6 @@
 <style scoped>
 @import '../styles/Main.css';
 
-@font-face {
-	font-family: 'PixelFont';
-	src: url('../assets/font/pixelfont.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-		url('../assets/font/pixelfont.ttf') format('truetype');
-
-}
-
 .title {
   margin-top: 10px;
 }
@@ -399,12 +392,6 @@
 }
 
 .subtitle.specialFont {
-	font-family: "PixelFont";
-	font-weight: bold;
-	font-size: 30px;
-}
-
-.specialFont {
 	font-family: "PixelFont";
 	font-weight: bold;
 	font-size: 30px;
@@ -480,6 +467,10 @@ a:active {
 	.subtitle.mobile-text {
 		font-weight: bold;
 		font-size: large;
+	}
+	.subtitle.specialFont.mobile-text{
+		font-weight: bold;
+		font-size: 25px;
 	}
 
 	.changeProfileButton.mobile-text {
