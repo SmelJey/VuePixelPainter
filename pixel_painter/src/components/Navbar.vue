@@ -35,7 +35,7 @@ export default {
                                 this.$router.push('/profile?id=' + this.$cookies.get('login'))
                             }
                         } else {
-                            this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
+                            this.$router.push('/auth?cb=' + '/profile');
                         }
                     })
                     .catch((error) => {
@@ -43,7 +43,7 @@ export default {
                     })
 
             } else {
-                this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+                this.$router.push('/auth?cb=' + '/profile')
             }
         },
         goToRedactor () {
