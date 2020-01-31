@@ -9,10 +9,11 @@
   }
 
   .post .card .photo {
-    height: 338px;
-    width: 337px;
+    height: 340px;
+    width: 339px;
     margin-top: 0;
     border-radius: 9px 9px 9px 9px;
+    border: 2px solid rgb(175, 166, 166);
   }
 
 .card {
@@ -25,7 +26,6 @@
     height: 340px;
     width: 339px;
     margin: 10px 15px;
-    border: 1px solid rgb(138, 132, 132);
     z-index: 1;
   }
 
@@ -86,14 +86,24 @@
     object-fit: cover;
 }
 
-.min div {
-    margin-left: 15px;
+.min .Profile {
+    width: 50px;
+    margin-left: 35px;
+}
+
+.min .authorName {
     font-size: 15px;
     font-weight: 600;
+    width: 176px;
+}
+
+.min .authorName p {
+   float: left;
+   margin-left: 10px;
 }
 
 .min .like {
-    margin-left: 130px;
+    width: 80px;
 }
 
 .card:hover .min {
@@ -106,7 +116,11 @@
     transition: 0.7s;
 }
 
-@media screen and (max-width: 400px) and (max-height: 900px) { 
+.card .user_m {
+    display: none;
+}
+
+@media screen and (max-width: 1030px) { 
     .post {
         display: table-cell;
         display: flex;
@@ -118,10 +132,12 @@
       }
     
       .post .card .photo {
-        height: 278px;
-        width: 277px;
+        height: 290px;
+        width: 280px;
         margin-top: 0;
-        border-radius: 9px 9px 9px 9px;
+        border-radius: 9px 9px 0px 0px;
+        border-left: 2px solid rgb(175, 166, 166);
+        border-right: 2px solid rgb(175, 166, 166);
       }
     
     .card {
@@ -131,23 +147,16 @@
         align-items: center;
         flex-direction: column;
         border-radius: 10px 10px 10px 10px;
-        height: 280px;
-        width: 279px;
+        height: 290px;
+        width: 280px;
         margin: 10px 5px;
-        border: 1px solid rgb(138, 132, 132);
+        border: 2px solid rgb(175, 166, 166);
         z-index: 1;
       }
     
       .shadow {
-        position: absolute;
-        margin-top: 80px;
-        height: 120px;
-        width: 278px;
-        background: linear-gradient(top, transparent, #000);
-        border-radius: 0 0 10px 10px;
-        opacity: 0;
-        transition: 0.7s;
-        z-index: 2;
+        display: block;
+        width: 200px;
       }
     
       .post .user {
@@ -155,25 +164,17 @@
         margin-left: 15px;
     }
     
-    .user {
-        position: absolute;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        text-decoration: none;
-        color: #000;
-    }
-    
-    .user .ava {
-        width: 60px;
-        height: 60px;
+    .user_m .ava {
+        width: 50px;
+        height: 50px;
         border-radius: 100%;
         object-fit: cover;
         border: 1px solid rgb(29, 28, 28);
+        margin-top: 8px;
     }
     
     .min {
-        display: flex;
+        display: none;
         justify-content: flex-start;
         align-items: center;
         margin-top: 250px;
@@ -181,37 +182,52 @@
         opacity: 0;
         transition: 0.7s;
         z-index: 3;
+        width: 280px;
     }
     
-    .min p {
-        margin-bottom: 8px;
-        color: white;
+    .user_m p {
+        color: black;
     }
     
-    .min .ava {
-        width: 45px;
-        height: 45px;
+    .user_m .ava {
+        width: 40px;
+        height: 40px;
         border-radius: 100%;
         object-fit: cover;
     }
     
-    .min div {
-        margin-left: 15px;
-        font-size: 15px;
-        font-weight: 600;
+    .user_m .Profile {
+        width: 50px;
+        margin-left: 10px;
     }
     
-    .min .like {
-        margin-left: 130px;
+    .user_m .authorName {
+        font-size: 15px;
+        font-weight: 600;
+        width: 166px;
+    }
+
+    .user_m .authorName p {
+        float: left;
+        margin-left: 10px
+    }
+    
+    .user_m .like {
+        margin-top: 11px;
+        width: 60px;
     }
     
     .card:hover .min {
         opacity: 1;
         transition: 0.7s;
     }
-    
-    .card:hover .shadow {
-        opacity: .42;
-        transition: 0.7s;
+
+    .card .user_m {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 80px;
+        width: 279px;
+        border-radius: 0px 0px 10px 10px;
     }
 }
