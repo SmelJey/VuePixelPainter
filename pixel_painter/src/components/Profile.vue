@@ -154,7 +154,7 @@
 			},
 			requestImages() {
 				let req = '/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
-						+ '&login=' + this.id + '&token=' + this.$cookies.get('token')
+						+ '&login=' + this.id + '&token=' + this.$cookies.get('token');
 				axios.get(req)
 					.then((response) => {
 						let list = [];
@@ -187,7 +187,7 @@
 				}
 			},
 			requestMeta() {
-				let req = 'http://localhost:8080/account/check_token?token=' + this.$cookies.get('token')
+				let req = 'http://localhost:8080/account/check_token?token=' + this.$cookies.get('token');
 				Axios.get(req)
 					.then((response) => {
 						let req = 'token=' + this.$cookies.get('token');
@@ -281,7 +281,7 @@
 					this.error = "Incorrect pass";
 				} else {
 					let req = 'http://localhost:8080/account/edit?&field=' + 'password' + '&value='
-							+ this.newMeta['password'] + '&token=' + this.$cookies.get('token')
+							+ this.newMeta['password'] + '&token=' + this.$cookies.get('token');
 					Axios.post(req)
 						.then((response) => {
 							if (response.data['status'] === 'FAIL') {

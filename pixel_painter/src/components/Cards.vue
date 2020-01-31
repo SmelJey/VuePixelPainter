@@ -129,7 +129,7 @@
             },
             updateImages() {
                 this.$emit('like');
-                let req = this.request +'&offset=0' + '&count=' + this.numberOfPic
+                let req = this.request +'&offset=0' + '&count=' + this.numberOfPic;
                 axios.post(req)
                     .then((response) => {
                         if (response.data["status"] === "OK") {
@@ -147,7 +147,7 @@
                 this.isRequired = true;
             },
             requestImages() {
-                let req = this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic
+                let req = this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic;
                 axios.post(req)
                     .then((response) => {
                         if (response.data["status"] === "OK") {

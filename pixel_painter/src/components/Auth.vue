@@ -189,10 +189,11 @@
 								this.$cookies.set('token', response.data['token'], 3600);
 								this.$cookies.set('login', this.inputUsername, 3600);
 								if (this.cb != null) {
+									let route = this.cb;
 									if (this.cb === '/profile') {
-										this.cb = '/profile?id=' + this.inputUsername
+										route = '/profile?id=' + this.inputUsername
 									}
-									this.$router.push(this.cb);
+									this.$router.push(route);
 								} else {
 									this.$router.push({name: 'Home'});
 								}

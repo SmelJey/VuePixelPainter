@@ -191,7 +191,7 @@
             save: function() {
                 let c = document.getElementById('canvas');
                 let url = c.toDataURL();
-                let label = "test";
+                let label = "picture";
 
                 this.showSaver = false;
 
@@ -208,7 +208,7 @@
                 let c = document.getElementById('canvas');
                 let req = '/create?data=' + encodeURIComponent(c.toDataURL())
                     + '&is_private=false'
-                    + '&token=' + this.$cookies.get('token')
+                    + '&token=' + this.$cookies.get('token');
                 axios.post(req)
                     .then((response) => {
                         if (response.data['status'] === 'INVALID_TOKEN'){

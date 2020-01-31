@@ -48,7 +48,7 @@
                 if (this.isLiked)
                     operation = '/remove?';
 
-                let req = operation + 'art_id=' + this.artId + '&token=' + this.$cookies.get('token')
+                let req = operation + 'art_id=' + this.artId + '&token=' + this.$cookies.get('token');
                 axios.post(req)
                     .then((response) => {
                         if (response.data['status'] === 'INVALID_TOKEN') {

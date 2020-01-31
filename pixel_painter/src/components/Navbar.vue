@@ -25,7 +25,7 @@
         methods: {
             goToProfile () {
                 if (this.$cookies.get('token') !== null) {
-                    let req = 'check_token?token=' + this.$cookies.get('token')
+                    let req = 'check_token?token=' + this.$cookies.get('token');
                     axios.get(req)
                         .then((response) => {
                             if (response.data["status"] === "OK") {
