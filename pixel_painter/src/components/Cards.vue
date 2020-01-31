@@ -36,8 +36,8 @@
 			v-on:picClick="pictureClick(indx)">
 		</Post>
 		<div style="width: 100%" v-show="showLoadButton">
-			<button class="button" v-on:click="requestImages">
-				Load
+			<button class="button is-rounded" v-on:click="requestImages">
+				<i class="fas fa-angle-down"></i>
 			</button>
 		</div>
     </div>
