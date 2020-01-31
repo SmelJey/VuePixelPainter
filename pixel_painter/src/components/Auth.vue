@@ -4,7 +4,7 @@
 			<div v-on:click="closeModal()" class="modal-background"></div>
 			<div class="modal-card">
 				<header class="modal-card-head">
-					<p class="modal-card-title"></p>
+					<p class="modal-card-title specialFont register-title">Registration</p>
 					<button v-on:click="closeModal()" class="delete" aria-label="close"></button>
 				</header>
 				<section class="modal-card-body">
@@ -35,7 +35,7 @@
 					<p v-if="haveError && showModal" class="help is-danger">{{ errorMessage }}</p>
 					</section>
 					<footer class="modal-card-foot">
-						<button v-on:click="register()" class="button is-fullwidth is-rounded">
+						<button v-on:click="register()" class="button is-fullwidth is-rounded specialFont main-button-font">
 							Register
 						</button>
 						
@@ -81,11 +81,11 @@
 					</p>
 				</div>
 				<div class="field">
-					<button v-on:click="login()" class="button is-fullwidth is-rounded">
+					<button v-on:click="login()" class="button is-fullwidth is-rounded specialFont main-button-font">
 						Login
 					</button>
 
-					<button v-on:click="openModal()" class="button is-fullwidth is-rounded">
+					<button v-on:click="openModal()" class="button is-fullwidth is-rounded specialFont main-button-font">
 						Register
 					</button>
 				</div>
@@ -213,6 +213,7 @@
 </script>
 
 <style scoped>
+@import '../styles/Main.css';
 
 #logo {
 	padding: 20px 15px 20px 20px;
@@ -231,6 +232,14 @@
 	margin-left: 10px;
 	margin-top: 10px;
 	margin-right: 20px;
+}
+
+.register-title {
+	font-size: 30px;
+}
+
+.main-button-font {
+	font-size: 20px;
 }
 
 #carousel {

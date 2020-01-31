@@ -66,8 +66,7 @@
 				<p class="subtitle mobile-text"><i class="fas fa-map-marker-alt"></i>{{ accountMeta['country'] ? accountMeta['country'] : 'Alien'}}</p>
 				<p class="subtitle specialFont mobile-text">Contact:</p>
 				<p class="subtitle mobile-text"><i class="fas fa-envelope"></i> {{ accountMeta['email'] ? accountMeta['email'] : 'Outerspace'}}</p>
-				
-				<p class="subtitle mobile-text"><i class="fab fa-vk"></i><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? accountMeta['vk_profile'] : ''}}</a></p>
+				<p class="subtitle mobile-text" v-show="accountMeta['vk_profile'] != ''"><i class="fab fa-vk"></i><a v-bind:href="accountMeta['vk_profile']">{{ accountMeta['vk_profile'] ? accountMeta['vk_profile'] : ''}}</a></p>
 				<button class="button changeProfileButton mobile-text is-success" v-if="isSelf" v-on:click="showModal = true"> Change your personal information </button>
 			</div>
 		</div>

@@ -4,6 +4,7 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
+                    <button class="button is-small is-rounded edtibutton has-background-grey-lighter" v-on:click="closeModal"><i class="fas fa-pencil-alt"></i></button>
                     <p class="modal-card-title specialFont">Art</p>
                     <button class="delete" aria-label="close" v-on:click="closeModal"></button>
                 </header>
@@ -210,6 +211,12 @@
     background: none;
     outline: none;
     margin-left: 5px;
+}
+
+.edtibutton {
+	background: ;
+	margin-top: 10px;
+	margin-right: 10px;
 }
 
 @media screen and (max-width: 768px), print {
