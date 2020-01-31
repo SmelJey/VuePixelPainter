@@ -148,30 +148,26 @@
 					this.errorMessage = 'Input email';
 					this.haveError = true;
 				} else if (this.inputPassword.length < 6) {
-					this.errorMessage = 'Password length must be more that 6 symbols';
+					this.errorMessage = 'Password length must be more that 6 characters';
 					this.haveError = true;
 				} else {
 					this.haveError = false;
-					axios.post('/register?login=' + this.inputUsername
+					let req = '/register?login=' + this.inputUsername
 							+ '&password=' + this.inputPassword
-							+ '&email=' + this.inputEmail)
-							.then((response) => {
-								if (response.data["status"] === "OK"){
-									this.$store.commit('setToken', response.data['token']);
-									this.$store.commit('setUsername', this.inputUsername);
-									this.showModal = false;
-								} else {
-									this.haveError = true;
-									this.errorMessage = 'Choose another login';
-								}
-
-								console.log(response.data);
-							})
-							.catch((error) => {
+							+ '&email=' + this.inputEmail;
+					axios.post(req)
+						.then((response) => {
+							if (response.data["status"] === "OK") {
+								this.showModal = false;
+							} else {
 								this.haveError = true;
-								this.errorMessage = 'Something odd happened';
-								console.log(error);
-							});
+								this.errorMessage = 'Incorrect input';
+							}
+						})
+						.catch(() => {
+							this.haveError = true;
+							this.errorMessage = 'Incorrect input';
+						});
 				}
 			},
 			login: function() {
@@ -179,22 +175,25 @@
 					this.errorMessage = 'Input username';
 					this.haveError = true;
 				} else if (this.inputPassword.length < 6) {
-					this.errorMessage = 'Password length must be more that 6 symbols';
+					this.errorMessage = 'Password length must be more that 6 characters';
 					this.haveError = true;
 				} else {
 					this.haveError = false;
 
-					axios.post('/login?login=' + this.inputUsername
-							+ '&password=' + this.inputPassword)
+					let req = '/login?login=' + this.inputUsername
+							+ '&password=' + this.inputPassword;
+
+					axios.get(req)
 						.then((response) => {
 							if (response.data["status"] === "OK"){
 								this.$cookies.set('token', response.data['token'], 3600);
 								this.$cookies.set('login', this.inputUsername, 3600);
 								if (this.cb != null) {
+									let route = this.cb;
 									if (this.cb === '/profile') {
-										this.cb = '/profile?id=' + this.inputUsername
+										route = '/profile?id=' + this.inputUsername
 									}
-									this.$router.push(this.cb);
+									this.$router.push(route);
 								} else {
 									this.$router.push({name: 'Home'});
 								}
@@ -202,13 +201,10 @@
 								this.haveError = true;
 								this.errorMessage = 'Incorrect login or password';
 							}
-
-							console.log(response.data);
 						})
-						.catch((error) => {
+						.catch(() => {
 							this.haveError = true;
-							this.errorMessage = 'Something odd happened';
-							console.log(error);
+							this.errorMessage = 'Incorrect login or password';
 						});
 				}
 			},

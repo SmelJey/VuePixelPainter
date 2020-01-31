@@ -13,13 +13,13 @@
                 </section>
                 <footer v-if="showModal" class="modal-card-foot">
                     <span class="artAuthor" style="font-weight: bold;">Author: </span>
-					<span class="likeAuthor">
+					<span v-on:click="goToProfile()" class="likeAuthor" >
 						{{ this.imageList[this.modalIndx].owner }}
 					</span>
                     <span class="has-text-right mobile-text"> {{ this.imageList[this.modalIndx].likes }}</span>
                     <button class="likebutton" v-on:click="clickLike()">
-                        <img v-if="!this.imageList[this.modalIndx].isLiked" src="../assets/icons/black_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
-                        <img v-if="this.imageList[this.modalIndx].isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                        <img v-if="!this.imageList[this.modalIndx].isLiked" src="../assets/icons/black_like.png" height="25px" width="25px"/>
+                        <img v-if="this.imageList[this.modalIndx].isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px"/>
                     </button>
                 </footer>
             </div>
@@ -81,29 +81,28 @@
                 if (!this.isRequired) {
                     this.requestImages();
                 }
-                console.log(this.imageList);
                 return this.imageList
             }
         },
         methods: {
+            goToProfile() {
+                if (this.$router.currentRoute.fullPath !== '/profile?id=' + this.imageList[this.modalIndx].owner)
+                    this.$router.push('/profile?id=' + this.imageList[this.modalIndx].owner);
+            },
             clickLike() {
                 let operation = '/add?';
                 if (this.imageList[this.modalIndx].isLiked)
                     operation = '/remove?';
-                Axios.post('http://localhost:8080/likes' + operation + 'art_id=' + this.imageList[this.modalIndx].id + '&token=' + this.$cookies.get('token'))
+                let req = 'http://localhost:8080/likes' + operation + 'art_id=' + this.imageList[this.modalIndx].id + '&token=' + this.$cookies.get('token');
+                Axios.post(req)
                     .then((response) => {
-                        console.log(response);
                         if (response.data['status'] === 'INVALID_TOKEN') {
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                         this.updateImages()
                     })
-                    .catch((error) => {
-                        console.log(error);
-                    });
             },
             pictureClick(indx) {
-                console.log('click happened');
                 this.showModal = true;
                 this.modalIndx = indx;
 
@@ -130,7 +129,6 @@
                         innerId: response.data['items'][i].art_id + response.data['items'][i].likes * 10000
                     });
                 }
-                console.log(list);
                 return list;
             },
             closeModal() {
@@ -138,33 +136,27 @@
             },
             updateImages() {
                 this.$emit('like');
-                console.log('updated');
-                axios.post(
-                    this.request +'&offset=0' + '&count=' + this.numberOfPic)
+                let req = this.request +'&offset=0' + '&count=' + this.numberOfPic;
+                axios.post(req)
                     .then((response) => {
-                        console.log(response.data);
                         if (response.data["status"] === "OK") {
                             let list = this.proceedResponse(response);
                             this.loadedPic = response.data["items"].length;
                             this.imageList = list;
                             this.imageList.sort((a, b) => b.id - a.id);
-                            console.log(this.imageList);
                         } else {
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
-                    .catch((error) => {
+                    .catch(() => {
                         this.isRequired = false;
-                        console.log(error);
                     });
                 this.isRequired = true;
             },
             requestImages() {
-                console.log('requested');
-                axios.post(
-                    this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic)
+                let req = this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic;
+                axios.post(req)
                     .then((response) => {
-                        console.log(response.data);
                         if (response.data["status"] === "OK") {
                             let list = this.proceedResponse(response);
                             this.loadedPic = response.data["items"].length;
@@ -175,14 +167,12 @@
 
                             this.imageList.push.apply(this.imageList, list);
                             this.imageList.sort((a, b) => b.id - a.id);
-                            console.log(this.imageList);
                         } else {
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
-                    .catch((error) => {
+                    .catch(() => {
                         this.isRequired = false;
-                        console.log(error);
                     });
                 this.isRequired = true;
             }

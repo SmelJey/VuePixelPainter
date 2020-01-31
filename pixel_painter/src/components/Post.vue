@@ -47,23 +47,22 @@
                 let operation = '/add?';
                 if (this.isLiked)
                     operation = '/remove?';
-                    axios.post(operation + 'art_id=' + this.artId + '&token=' + this.$cookies.get('token'))
+
+                let req = operation + 'art_id=' + this.artId + '&token=' + this.$cookies.get('token');
+                axios.post(req)
                     .then((response) => {
-                        console.log(response);
                         if (response.data['status'] === 'INVALID_TOKEN') {
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                         this.$emit('like');
                     })
-                    .catch((error) => {
-                        console.log(error);
-                    });
             },
             pictureClick() {
                 this.$emit('picClick');
             },
             goToProfile () {
-                this.$router.push('/profile?id=' + this.authorName);
+                if (this.$router.currentRoute.fullPath !== '/profile?id=' + this.authorName)
+                    this.$router.push('/profile?id=' + this.authorName);
             },
             drawImage () {
                 let canvas = document.getElementById(this.artId).getContext('2d');
@@ -75,7 +74,6 @@
             }
         },
         mounted() {
-            console.log(this);
             this.drawImage();
         }
     }

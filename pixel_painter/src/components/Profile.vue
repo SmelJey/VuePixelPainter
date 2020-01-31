@@ -153,28 +153,26 @@
 				document.getElementById(tabName).style.display = "block";
 			},
 			requestImages() {
-				axios.post(
-					'/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
-						+ '&login=' + this.id + '&token=' + this.$cookies.get('token'))
-								.then((response) => {
-									console.log(response.data);
-									let list = [];
-									if (response.data["status"] === "OK") {
-										for (let i = 0; i < response.data["items"].length; ++i) {
-											list.push({id: i + this.offset, url: response.data["items"][i].data});
-										}
-										this.loadedPic = response.data["items"].length;
-										this.offset += this.loadedPic;
-										this.imageList.push.apply(this.imageList, list);
-										this.drawImageOnCanvas();
-									} else {
-										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-									}
-								})
-								.catch((error) => {
-									this.isRequired = false;
-									console.log(error);
-								});
+				let req = '/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
+						+ '&login=' + this.id + '&token=' + this.$cookies.get('token');
+				axios.get(req)
+					.then((response) => {
+						let list = [];
+						if (response.data["status"] === "OK") {
+							for (let i = 0; i < response.data["items"].length; ++i) {
+								list.push({id: i + this.offset, url: response.data["items"][i].data});
+							}
+							this.loadedPic = response.data["items"].length;
+							this.offset += this.loadedPic;
+							this.imageList.push.apply(this.imageList, list);
+							this.drawImageOnCanvas();
+						} else {
+							this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+						}
+					})
+					.catch(() => {
+						this.isRequired = false;
+					});
 				this.isRequired = true;
 			},
 			drawImageOnCanvas() {
@@ -189,59 +187,55 @@
 				}
 			},
 			requestMeta() {
-				console.log("requested");
-
-				Axios.get('http://localhost:8080/account/check_token?token=' + this.$cookies.get('token'))
+				let req = 'http://localhost:8080/account/check_token?token=' + this.$cookies.get('token');
+				Axios.get(req)
 					.then((response) => {
 						let req = 'token=' + this.$cookies.get('token');
 						if (response.data['status'] !== 'OK' || this.$cookies.get('login') !== this.id) {
 							this.isSelf = false;
 							req = 'login=' + this.id;
 						}
-						Axios.get('http://localhost:8080/account/get?' + req)
-								.then((response) => {
-									console.log(response.data);
-									if (response.data['status'] === 'OK') {
-										this.accountName = response.data['login'];
-										this.accountMeta = response.data;
+						req = 'http://localhost:8080/account/get?' + req;
+						Axios.get(req)
+							.then((response) => {
+								if (response.data['status'] === 'OK') {
+									this.accountName = response.data['login'];
+									this.accountMeta = response.data;
 
-										for (let i in response.data) {
-											if (i === 'status')
-												continue;
-											if (Object.prototype.hasOwnProperty.call(response.data, i)) {
-												this.accountMeta[i] = response.data[i];
-												this.newMeta[i] = this.accountMeta[i];
-											}
+									for (let i in response.data) {
+										if (i === 'status')
+											continue;
+										if (Object.prototype.hasOwnProperty.call(response.data, i)) {
+											this.accountMeta[i] = response.data[i];
+											this.newMeta[i] = this.accountMeta[i];
 										}
-										this.likesCount = this.newMeta['likes'];
-										if (this.$cookies.get('login') != null
-												&& this.accountName === this.$cookies.get('login')){
-											this.isSelf = true;
-										}
-										console.log(this.newMeta);
-									} else if (response.data['status'] === 'INVALID_TOKEN') {
-										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-									} else if (response.data['status'] === 'INVALID_LOGIN') {
-										this.isInvalid = true;
 									}
-								}).catch((error) => {
-									console.log(error);
-								})
+									this.likesCount = this.newMeta['likes'];
+									if (this.$cookies.get('login') != null
+											&& this.accountName === this.$cookies.get('login')){
+										this.isSelf = true;
+									}
+								} else if (response.data['status'] === 'INVALID_TOKEN') {
+									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+								} else if (response.data['status'] === 'INVALID_LOGIN') {
+									this.isInvalid = true;
+								}
+							})
 					})
-					.catch((error) => {
-						console.log(error);
-					});
-
 
 			},
 			saveMeta() {
-				console.log(this.newMeta);
 				let updatedMeta = [];
 				for (let item in this.newMeta) {
 					if (Object.prototype.hasOwnProperty.call(this.newMeta, item)) {
-						if (this.newMeta[item] === undefined ||  item === 'password' || item === 'likes'
+						if (this.newMeta[item] === undefined ||  item === 'password' || item === 'likes' || item === 'status'
 								|| item === 'email' || item === 'login' || this.newMeta[item] === "" || this.newMeta[item] === 0)
 							continue;
+
+						if (item !== 'age' && this.newMeta[item].includes(',')) {
+							this.error = "Incorrect information";
+							return;
+						}
 
 						updatedMeta.push(item);
 					}
@@ -265,20 +259,20 @@
 
 					Axios.post(req)
 						.then((response) => {
-							console.log(response.data);
 							if (response.data['status'] === 'INVALID_TOKEN') {
 								if (this.$router.currentRoute.name !== 'Auth')
 									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
 							}
 							this.requestMeta();
 							if (response.data['status'] === 'OK') {
+								this.error = "";
 								this.showModal = false;
 							} else {
-								this.error = "Not all information was processed"
+								this.error = "Incorrect information"
 							}
 
-						}).catch((error) => {
-							console.log(error);
+						}).catch(() => {
+							this.error = "Incorrect information"
 						});
 				}
 			},
@@ -286,43 +280,44 @@
 				if (this.newMeta['password'] == null || this.newMeta['password'].length < 6) {
 					this.error = "Incorrect pass";
 				} else {
-					Axios.post('http://localhost:8080/account/edit?&field=' + 'password' + '&value='
-							+ this.newMeta['password'] + '&token=' + this.$cookies.get('token'))
-							.then((response) => {
-								console.log(response.data);
-								if (response.data['status'] === 'FAIL') {
-									this.error = "Incorrect pass"
-								} else {
-									this.error = "";
-									if (this.$router.currentRoute.name !== 'Auth')
-										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-								}
-							}).catch((error) => {
-						console.log(error);
-					})
+					let req = 'http://localhost:8080/account/edit?&field=' + 'password' + '&value='
+							+ this.newMeta['password'] + '&token=' + this.$cookies.get('token');
+					Axios.post(req)
+						.then((response) => {
+							if (response.data['status'] === 'FAIL') {
+								this.error = "Incorrect pass"
+							} else {
+								this.error = "";
+								if (this.$router.currentRoute.name !== 'Auth')
+									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+							}
+						}).catch(() => {
+							this.error = "Incorrect pass"
+						})
 				}
 			},
 			changeEmail() {
 				if (this.newMeta['email'] == null) {
 					this.error = "Incorrect pass";
 				} else {
-					Axios.post('http://localhost:8080/account/edit?&field=' + 'email' + '&value='
-							+ this.newMeta['email'] + '&token=' + this.$cookies.get('token'))
-							.then((response) => {
-								console.log(response.data);
-								if (response.data['status'] === 'FAIL') {
-									this.error = "Incorrect email"
-								} else {
-									this.error = "";
-									if (this.$router.currentRoute.name !== 'Auth')
-										this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-								}
-							}).catch((error) => {
-						console.log(error);
-					})
+					let req = 'http://localhost:8080/account/edit?&field=' + 'email' + '&value='
+							+ this.newMeta['email'] + '&token=' + this.$cookies.get('token');
+					Axios.post(req)
+						.then((response) => {
+							if (response.data['status'] === 'FAIL') {
+								this.error = "Incorrect email"
+							} else {
+								this.error = "";
+								if (this.$router.currentRoute.name !== 'Auth')
+									this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
+							}
+						}).catch(() => {
+							this.error = "Incorrect email"
+						})
 				}
 			},
 			closeModal() {
+				this.error = "";
 				this.showModal = false;
 				for (let i in this.accountMeta) {
 					if (Object.prototype.hasOwnProperty.call(this.accountMeta, i)) {
@@ -342,10 +337,6 @@
 
 .title {
   margin-top: 10px;
-}
-
-.container {
-	margin: 5px 5px 5px 5px;
 }
 
 .shadow {

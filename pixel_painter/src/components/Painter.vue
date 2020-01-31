@@ -49,7 +49,7 @@
                             :style="{'background-color': btn.color}"></button>
                 </div>
                 <div class="columns is-centered is-multiline">
-                    <canvas class="box" style="margin: 0 auto;" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
+                    <canvas class="box" style="margin: 0 auto; padding: 0;" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
                         v-on:touchstart="handleMouseDown" v-on:touchmove="handleMouseMove" v-on:touchend="handleMouseUp"
                         v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove" onload="restorePainter()">
                     </canvas>
@@ -125,9 +125,7 @@
                 funcButton: [
                     { btnHandle: this.eraser, color: "White", active: false, text:"Erase" },
                     { btnHandle: this.clear, color: "White", active: false, text:"Clear" },
-                    { btnHandle: this.load, color: "White", active: false, text:"Load from gallery" },
                     { btnHandle: this.publish, color: "White", active: false, text:"Publish" },
-                    { btnHandle: this.share, color: "White", active: false, text:"Share" }
                 ],
                 mouse: {
                     current: {
@@ -148,8 +146,8 @@
                 let rect = c.getBoundingClientRect();
 
                 return {
-                    x: (this.mouse.current.x - rect.left - 20) / 30,
-                    y: (this.mouse.current.y - rect.top - 20) / 30
+                    x: (this.mouse.current.x - rect.left - window.pageXOffset) / (rect.width / 16),
+                    y: (this.mouse.current.y - rect.top - window.pageYOffset) / (rect.height / 16)
                 }
             },
             saveLink: function(){
@@ -165,7 +163,6 @@
                 ctx.strokeStyle = "rgba(255,255,255,1)";
             },
             restorePainter: function() {
-                console.log(this.$store.getters.getPainterData);
                 let canvas = document.getElementById("canvas");
                 let ctx = canvas.getContext("2d");
 
@@ -194,7 +191,7 @@
             save: function() {
                 let c = document.getElementById('canvas');
                 let url = c.toDataURL();
-                let label = "test";
+                let label = "picture";
 
                 this.showSaver = false;
 
@@ -205,23 +202,19 @@
                         link.href = URL.createObjectURL(blob);
                         link.download = label;
                         link.click()
-                    }).catch(error => console.error(error));
+                    });
             },
             publish: function() {
                 let c = document.getElementById('canvas');
-                console.log(this.$cookies.get('token'));
-                axios.post('/create?data=' + encodeURIComponent(c.toDataURL())
+                let req = '/create?data=' + encodeURIComponent(c.toDataURL())
                     + '&is_private=false'
-                    + '&token=' + this.$cookies.get('token'))
+                    + '&token=' + this.$cookies.get('token');
+                axios.post(req)
                     .then((response) => {
-                        console.log(response.data);
                         if (response.data['status'] === 'INVALID_TOKEN'){
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
-                    .catch((error) => {
-                        console.log(error)
-                    });
             },
             loadFromLink : function() {
                 testImage(this.loadFromURL, (url, res) => {
@@ -255,7 +248,6 @@
 
                     ctx.fillRect(Math.trunc(this.currentMouse.x), Math.trunc(this.currentMouse.y), 1, 1);
                 }
-
             },
 
             handleMouseDown: function (event) {

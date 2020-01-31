@@ -21,43 +21,38 @@
         }
     });
 
-export default {
-    methods: {
-        goToProfile () {
-            console.log(this.$cookies.get('token'));
-            if (this.$cookies.get('token') !== null) {
-                axios.get('check_token?token=' + this.$cookies.get('token'))
-                    .then((response) => {
-                        console.log(response.data);
-                        if (response.data["status"] === "OK") {
-                            if (this.$router.currentRoute.fullPath.toLowerCase()
-                                !== '/profile?id=' + this.$cookies.get('login').toLowerCase()) {
-                                this.$router.push('/profile?id=' + this.$cookies.get('login'))
+    export default {
+        methods: {
+            goToProfile () {
+                if (this.$cookies.get('token') !== null) {
+                    let req = 'check_token?token=' + this.$cookies.get('token');
+                    axios.get(req)
+                        .then((response) => {
+                            if (response.data["status"] === "OK") {
+                                if (this.$router.currentRoute.fullPath.toLowerCase()
+                                    !== '/profile?id=' + this.$cookies.get('login').toLowerCase()) {
+                                    this.$router.push('/profile?id=' + this.$cookies.get('login'))
+                                }
+                            } else {
+                                this.$router.push('/auth?cb=' + '/profile');
                             }
-                        } else {
-                            this.$router.push('/auth?cb=' + '/profile');
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
-
-            } else {
-                this.$router.push('/auth?cb=' + '/profile')
-            }
-        },
-        goToRedactor () {
-            if (this.$router.currentRoute.name !== 'Painter') {
-                this.$router.push({name: 'Painter'})
-            }
-        },
-        goToHome () {
-            if (this.$router.currentRoute.name !== 'Home') {
-                this.$router.push({name: 'Home'})
-            }
-        },
+                        })
+                } else {
+                    this.$router.push('/auth?cb=' + '/profile')
+                }
+            },
+            goToRedactor () {
+                if (this.$router.currentRoute.name !== 'Painter') {
+                    this.$router.push({name: 'Painter'})
+                }
+            },
+            goToHome () {
+                if (this.$router.currentRoute.name !== 'Home') {
+                    this.$router.push({name: 'Home'})
+                }
+            },
+        }
     }
-}
 </script>
 
 <style scoped>
