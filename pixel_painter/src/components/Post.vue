@@ -2,11 +2,27 @@
     <div class="post">
         <div class="card">
             <canvas :id="this.artId" v-on:click.self="pictureClick()" class="photo" height="16" width="16"/>
+            <div class="user_m">
+                <div class="Profile">
+                        <a><img class="ava" v-on:@click="goToProfile()" src="../assets/test/ava.jpg"/></a>
+                    </div>
+                    <div class="authorName">
+                        <a><p v-on:click="goToProfile()">{{ this.authorName }}</p></a>
+                    </div>
+                    <div class="like">
+                        <a>
+                            <img v-if="!isLiked" src="../assets/icons/like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                            <img v-if="isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                        </a>
+                    </div>
+            </div>
             <div class="shadow" v-on:click.self="pictureClick()" />
             <div class="user" v-on:click.self="pictureClick()">
                 <div class="min">
-                    <a><img class="ava" v-on:@click="goToProfile()" src="../assets/test/ava.jpg"/></a>
-                    <div>
+                    <div class="Profile">
+                        <a><img class="ava" v-on:@click="goToProfile()" src="../assets/test/ava.jpg"/></a>
+                    </div>
+                    <div class="authorName">
                         <a><p v-on:click="goToProfile()">{{ this.authorName }}</p></a>
                     </div>
                     <div class="like">
