@@ -23,14 +23,6 @@
 
 <script>
     import Axios from 'axios'
-    const axios = Axios.create({
-        baseURL: 'http://localhost:8080/likes',
-        timeout: 1000,
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'allow_origins' : 'http://localhost:8080/'
-        }
-    });
 
     export default {
         name: 'Post',
@@ -44,12 +36,12 @@
         },
         methods: {
             clickLike() {
-                let operation = '/add?';
+                let operation = '/likes/add?';
                 if (this.isLiked)
-                    operation = '/remove?';
+                    operation = '/likes/remove?';
 
                 let req = operation + 'art_id=' + this.artId + '&token=' + this.$cookies.get('token');
-                axios.post(req)
+                Axios.post(req)
                     .then((response) => {
                         if (response.data['status'] === 'INVALID_TOKEN') {
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);

@@ -12,21 +12,13 @@
 
 <script>
     import Axios from 'axios'
-    const axios = Axios.create({
-        baseURL: 'http://localhost:8080/account',
-        timeout: 1000,
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'allow_origins' : 'http://localhost:8080/'
-        }
-    });
 
     export default {
         methods: {
             goToProfile () {
                 if (this.$cookies.get('token') !== null) {
-                    let req = 'check_token?token=' + this.$cookies.get('token');
-                    axios.get(req)
+                    let req = '/account/check_token?token=' + this.$cookies.get('token');
+                    Axios.get(req)
                         .then((response) => {
                             if (response.data["status"] === "OK") {
                                 if (this.$router.currentRoute.fullPath.toLowerCase()

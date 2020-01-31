@@ -79,14 +79,6 @@
 
 <script>
 	import Axios from 'axios'
-	const axios = Axios.create({
-		baseURL: 'http://localhost:8080/gallery',
-		timeout: 1000,
-		headers: {
-			'Access-Control-Allow-Origin': 'http://localhost:8080/',
-			'allow_origins' : 'http://localhost:8080/'
-		}
-	});
 
 	import Cards from './Cards.vue'
 	import Navbar from './Navbar.vue'
@@ -153,9 +145,9 @@
 				document.getElementById(tabName).style.display = "block";
 			},
 			requestImages() {
-				let req = '/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
+				let req = '/gallery/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
 						+ '&login=' + this.id + '&token=' + this.$cookies.get('token');
-				axios.get(req)
+				Axios.get(req)
 					.then((response) => {
 						let list = [];
 						if (response.data["status"] === "OK") {
@@ -187,7 +179,7 @@
 				}
 			},
 			requestMeta() {
-				let req = 'http://localhost:8080/account/check_token?token=' + this.$cookies.get('token');
+				let req = '/account/check_token?token=' + this.$cookies.get('token');
 				Axios.get(req)
 					.then((response) => {
 						let req = 'token=' + this.$cookies.get('token');
@@ -195,7 +187,7 @@
 							this.isSelf = false;
 							req = 'login=' + this.id;
 						}
-						req = 'http://localhost:8080/account/get?' + req;
+						req = '/account/get?' + req;
 						Axios.get(req)
 							.then((response) => {
 								if (response.data['status'] === 'OK') {
@@ -243,7 +235,7 @@
 				}
 
 				if (updatedMeta.length > 0) {
-					let req = 'http://localhost:8080/account/edit?&field=';
+					let req = '/account/edit?&field=';
 					for (let i in updatedMeta) {
 						req += updatedMeta[i];
 						req += ',';
@@ -280,7 +272,7 @@
 				if (this.newMeta['password'] == null || this.newMeta['password'].length < 6) {
 					this.error = "Incorrect pass";
 				} else {
-					let req = 'http://localhost:8080/account/edit?&field=' + 'password' + '&value='
+					let req = '/account/edit?&field=' + 'password' + '&value='
 							+ this.newMeta['password'] + '&token=' + this.$cookies.get('token');
 					Axios.post(req)
 						.then((response) => {
@@ -300,7 +292,7 @@
 				if (this.newMeta['email'] == null) {
 					this.error = "Incorrect pass";
 				} else {
-					let req = 'http://localhost:8080/account/edit?&field=' + 'email' + '&value='
+					let req = '/account/edit?&field=' + 'email' + '&value='
 							+ this.newMeta['email'] + '&token=' + this.$cookies.get('token');
 					Axios.post(req)
 						.then((response) => {

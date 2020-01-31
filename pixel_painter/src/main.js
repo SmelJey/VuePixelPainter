@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import App from './App'
 import VueCookies from 'vue-cookies'
-import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import VueCarousel from 'vue-carousel'
+import Axios from 'axios'
 
 import Auth from './components/Auth'
 import Home from './components/Home'
@@ -14,11 +14,12 @@ import "bulma/css/bulma.css"
 import "@fortawesome/fontawesome-free/css/all.css"
 import './../node_modules/bulma/css/bulma.css'
 
+
+Axios.defaults.baseURL = "http://5.63.159.185:8080";
+
 Vue.use(VueCarousel);
 Vue.use(VueRouter);
-Vue.use(Vuex);
 Vue.use(VueCookies);
-
 
 const router = new VueRouter({
   routes: [

@@ -47,14 +47,6 @@
 <script>
     import Post from './Post.vue'
     import Axios from 'axios'
-    const axios = Axios.create({
-        baseURL: 'http://localhost:8080/gallery',
-        timeout: 1000,
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'allow_origins' : 'http://localhost:8080/'
-        }
-    });
 
     export default {
         name: 'Cards',
@@ -94,7 +86,7 @@
                 let operation = '/add?';
                 if (this.imageList[this.modalIndx].isLiked)
                     operation = '/remove?';
-                let req = 'http://localhost:8080/likes' + operation + 'art_id=' + this.imageList[this.modalIndx].id + '&token=' + this.$cookies.get('token');
+                let req = '/likes' + operation + 'art_id=' + this.imageList[this.modalIndx].id + '&token=' + this.$cookies.get('token');
                 Axios.post(req)
                     .then((response) => {
                         if (response.data['status'] === 'INVALID_TOKEN') {
@@ -137,8 +129,8 @@
             },
             updateImages() {
                 this.$emit('like');
-                let req = this.request +'&offset=0' + '&count=' + this.requestedNumberPictures;
-                axios.post(req)
+                let req = '/gallery' + this.request +'&offset=0' + '&count=' + this.requestedNumberPictures;
+                Axios.post(req)
                     .then((response) => {
                         if (response.data["status"] === "OK") {
                             let list = this.proceedResponse(response);
@@ -155,8 +147,8 @@
                 this.isRequired = true;
             },
             requestImages() {
-                let req = this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic;
-                axios.post(req)
+                let req = '/gallery' + this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic;
+                Axios.post(req)
                     .then((response) => {
                         if (response.data["status"] === "OK") {
                             let list = this.proceedResponse(response);
@@ -173,7 +165,8 @@
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
-                    .catch(() => {
+                    .catch((error) => {
+                        console.log(error)
                         this.isRequired = false;
                     });
                 this.isRequired = true;

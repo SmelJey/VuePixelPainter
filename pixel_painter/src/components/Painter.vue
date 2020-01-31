@@ -77,14 +77,6 @@
 <script>
     import Navbar from './Navbar.vue'
     import Axios from 'axios'
-    const axios = Axios.create({
-        baseURL: 'http://localhost:8080/gallery',
-        timeout: 1000,
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'allow_origins' : 'http://localhost:8080/'
-        }
-    });
 
     export default {
         name: 'Painter',
@@ -206,10 +198,10 @@
             },
             publish: function() {
                 let c = document.getElementById('canvas');
-                let req = '/create?data=' + encodeURIComponent(c.toDataURL())
+                let req = '/gallery/create?data=' + encodeURIComponent(c.toDataURL())
                     + '&is_private=false'
                     + '&token=' + this.$cookies.get('token');
-                axios.post(req)
+                Axios.post(req)
                     .then((response) => {
                         if (response.data['status'] === 'INVALID_TOKEN'){
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
