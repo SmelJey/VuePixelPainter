@@ -60,10 +60,10 @@
                             v-on:click="btn.btnHandle(btn.color)"
                             :key="indx"
                             :style="{'background-color': btn.color}">
-                        {{btn.text}}
+                            <img v-bind:src="btn.url"/>
                     </button>
                     <button class="button menu-button is-rounded" v-on:click="showSaver = true">
-                        Save
+                        <img v-bind:src="this.saveicon"/>
                     </button>
                     <button class="button menu-button is-rounded" v-on:click="showLoader = true">
                         Load from link
@@ -93,6 +93,7 @@
         },
         data : function() {
             return {
+                saveicon: require('../assets/painter_icons/save_icon.png'),
                 width: 16,
                 height: 16,
                 defaultColor: "white",
@@ -123,9 +124,9 @@
                     { btnHandle: this.selectColor, color: "White", active: false }
                 ],
                 funcButton: [
-                    { btnHandle: this.eraser, color: "White", active: false, text:"Erase" },
-                    { btnHandle: this.clear, color: "White", active: false, text:"Clear" },
-                    { btnHandle: this.publish, color: "White", active: false, text:"Publish" },
+                    { btnHandle: this.eraser, color: "White", active: false, url: require('../assets/painter_icons/erase_icon.png') },
+                    { btnHandle: this.clear, color: "White", active: false, url: require('../assets/painter_icons/clear_icon.png') },
+                    { btnHandle: this.publish, color: "White", active: false, url: require('../assets/painter_icons/push_icon.png') },
                 ],
                 mouse: {
                     current: {
@@ -315,6 +316,12 @@
     margin-bottom: 5px;
     margin-left: 5px;
     margin-right: 5px;
+    height: 70px;
+}
+
+.button.menu-button img {
+    height: 50px;
+    width: 50px;
 }
 
 @media only screen and (min-width: 512px) {
