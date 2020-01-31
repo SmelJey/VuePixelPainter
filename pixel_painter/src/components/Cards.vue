@@ -24,18 +24,24 @@
                 </footer>
             </div>
         </div>
-        <Post v-for="(card, indx) in getImages"
-              :key="card.innerId"
-              :art-id="card.id"
-              :author-name="card.owner"
-              :url="card.url"
-              :likes="card.likes"
-              :is-liked="card.isLiked"
-              :is-req="isRequired"
-              v-on:like="updateImages()"
-              v-on:picClick="pictureClick(indx)">
-        </Post>
+		<Post v-for="(card, indx) in getImages"
+			:key="card.innerId"
+			:art-id="card.id"
+			:author-name="card.owner"
+			:url="card.url"
+			:likes="card.likes"
+			:is-liked="card.isLiked"
+			:is-req="isRequired"
+			v-on:like="updateImages()"
+			v-on:picClick="pictureClick(indx)">
+		</Post>
+		<div style="width: 100%" v-show="showLoadButton">
+			<button class="button" v-on:click="requestImages">
+				Load
+			</button>
+		</div>
     </div>
+    
 </template>
 
 <script>
@@ -66,6 +72,7 @@
                 imageList: [],
                 isRequired: false,
                 showModal: false,
+                showLoadButton: true,
                 modalIndx: -1
             }
         },
@@ -161,7 +168,11 @@
                         if (response.data["status"] === "OK") {
                             let list = this.proceedResponse(response);
                             this.loadedPic = response.data["items"].length;
+							if (this.loadedPic != this.numberOfPic) {
+								this.showLoadButton = false;
+							}
                             this.offset += this.loadedPic;
+
                             this.imageList.push.apply(this.imageList, list);
                             this.imageList.sort((a, b) => b.id - a.id);
                             console.log(this.imageList);
