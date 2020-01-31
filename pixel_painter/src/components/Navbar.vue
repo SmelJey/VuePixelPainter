@@ -5,6 +5,7 @@
             <div class="links">
                 <a><img @click="goToRedactor()" src="../assets/icons/pen_icon.png"></a>
                 <a><img @click="goToProfile()" src="../assets/icons/people_icon.png"></a>
+                <a><img src="../assets/icons/out_icon.png"></a>
             </div>
         </div>
     </nav>
