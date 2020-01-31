@@ -68,6 +68,7 @@
             return {
                 offset: 0,
                 numberOfPic: 50,
+                requestedNumberPictures: 0,
                 loadedPic: 0,
                 imageList: [],
                 isRequired: false,
@@ -136,7 +137,7 @@
             },
             updateImages() {
                 this.$emit('like');
-                let req = this.request +'&offset=0' + '&count=' + this.numberOfPic;
+                let req = this.request +'&offset=0' + '&count=' + this.requestedNumberPictures;
                 axios.post(req)
                     .then((response) => {
                         if (response.data["status"] === "OK") {
@@ -160,6 +161,7 @@
                         if (response.data["status"] === "OK") {
                             let list = this.proceedResponse(response);
                             this.loadedPic = response.data["items"].length;
+                            this.requestedNumberPictures += this.loadedPic;
 							if (this.loadedPic != this.numberOfPic) {
 								this.showLoadButton = false;
 							}
