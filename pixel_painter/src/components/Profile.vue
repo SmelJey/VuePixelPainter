@@ -1,6 +1,6 @@
 <template>
-	<div class="main">
-		<Navbar/>
+	<div class="main" :id="accountName">
+		<Navbar v-on:redirect="redirect" />
 		<div class="shadow"></div>
 		<div class="modal is-active" v-if="showModal">
 			<div class="modal-background"></div>
@@ -57,8 +57,8 @@
 			</div>
 		</section>
 		<div class="box section" v-if="!isInvalid">
-			<div id="Gallery" class="content-tab">
-				<Cards :request="'/get?token=' + this.$cookies.get('token') + '&login=' + this.id" v-on:like="requestMeta()" />
+			<div id="Gallery" :key="galleryReq" class="content-tab">
+				<Cards :request="this.galleryReq" v-on:like="requestMeta()" />
 			</div>
 			<div id="About" style="display:none;" class="content-tab">
 				<p class="subtitle mobile-text is-5">{{ [accountMeta['first_name'], accountMeta['second_name']].filter(Boolean).join(" ") }}</p>
@@ -78,14 +78,6 @@
 
 <script>
 	import Axios from 'axios'
-	const axios = Axios.create({
-		baseURL: 'http://localhost:8080/gallery',
-		timeout: 1000,
-		headers: {
-			'Access-Control-Allow-Origin': 'http://localhost:8080/',
-			'allow_origins' : 'http://localhost:8080/'
-		}
-	});
 
 	import Cards from './Cards.vue'
 	import Navbar from './Navbar.vue'
@@ -96,7 +88,7 @@
 			Cards
 		},
 		props: ['id'],
-		data: function(){
+		data: function() {
 			return {
 				accountPic: 'https://bulma.io/images/placeholders/128x128.png',
 				accountName: '',
@@ -106,6 +98,7 @@
 				isRequired: false,
 				currentTab: 'Gallery',
 				likesCount: 0,
+				galleryReq: '/get?token=' + this.$cookies.get('token') + '&login=' + this.id,
 				newMeta: {
 					first_name: '',
 					second_name: '',
@@ -122,15 +115,15 @@
 				loadedPic: 0
 			}
 		},
-		computed: {
-			getImages() {
-				if (!this.isRequired) {
-					this.requestImages();
-				}
-				return this.imageList
-			}
-		},
 		methods: {
+			redirect() {
+				this.$nextTick(() => {
+					this.requestMeta();
+					this.galleryReq = '/get?token=' + this.$cookies.get('token') + '&login=' + this.id;
+					this.$forceUpdate();
+				});
+
+			},
 			openTab(tabName) {
 				let i, x, tablinks;
 				x = document.getElementsByClassName("content-tab");
@@ -151,42 +144,8 @@
 
 				document.getElementById(tabName).style.display = "block";
 			},
-			requestImages() {
-				let req = '/get?'+'offset=' + this.offset + '&count=' + this.numberOfPic
-						+ '&login=' + this.id + '&token=' + this.$cookies.get('token');
-				axios.get(req)
-					.then((response) => {
-						let list = [];
-						if (response.data["status"] === "OK") {
-							for (let i = 0; i < response.data["items"].length; ++i) {
-								list.push({id: i + this.offset, url: response.data["items"][i].data});
-							}
-							this.loadedPic = response.data["items"].length;
-							this.offset += this.loadedPic;
-							this.imageList.push.apply(this.imageList, list);
-							this.drawImageOnCanvas();
-						} else {
-							this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath)
-						}
-					})
-					.catch(() => {
-						this.isRequired = false;
-					});
-				this.isRequired = true;
-			},
-			drawImageOnCanvas() {
-				for (let i = 0; i < this.imageList.length; ++i) {
-					let item = this.imageList[i];
-					let canvas = document.getElementById(item.id).getContext('2d');
-					let image = new Image(16, 16);
-					image.src = item.url;
-					image.onload = function() {
-						canvas.drawImage(image, 0, 0)
-					}
-				}
-			},
 			requestMeta() {
-				let req = 'http://localhost:8080/account/check_token?token=' + this.$cookies.get('token');
+				let req = '/account/check_token?token=' + this.$cookies.get('token');
 				Axios.get(req)
 					.then((response) => {
 						let req = 'token=' + this.$cookies.get('token');
@@ -194,7 +153,7 @@
 							this.isSelf = false;
 							req = 'login=' + this.id;
 						}
-						req = 'http://localhost:8080/account/get?' + req;
+						req = '/account/get?' + req;
 						Axios.get(req)
 							.then((response) => {
 								if (response.data['status'] === 'OK') {
@@ -242,7 +201,7 @@
 				}
 
 				if (updatedMeta.length > 0) {
-					let req = 'http://localhost:8080/account/edit?&field=';
+					let req = '/account/edit?&field=';
 					for (let i in updatedMeta) {
 						req += updatedMeta[i];
 						req += ',';
@@ -279,7 +238,7 @@
 				if (this.newMeta['password'] == null || this.newMeta['password'].length < 6) {
 					this.error = "Incorrect pass";
 				} else {
-					let req = 'http://localhost:8080/account/edit?&field=' + 'password' + '&value='
+					let req = '/account/edit?&field=' + 'password' + '&value='
 							+ this.newMeta['password'] + '&token=' + this.$cookies.get('token');
 					Axios.post(req)
 						.then((response) => {
@@ -299,7 +258,7 @@
 				if (this.newMeta['email'] == null) {
 					this.error = "Incorrect pass";
 				} else {
-					let req = 'http://localhost:8080/account/edit?&field=' + 'email' + '&value='
+					let req = '/account/edit?&field=' + 'email' + '&value='
 							+ this.newMeta['email'] + '&token=' + this.$cookies.get('token');
 					Axios.post(req)
 						.then((response) => {
@@ -417,20 +376,8 @@
 	background-color: #f7efed;
 }
 
-.container {
-	margin: 5px 5px 5px 5px;
-}
-
 .shadow {
 	height: 25px;
-}
-
-.likebutton {
-	padding: 0;
-	border: none;
-	background: none;
-	outline: none;
-	margin-left: 5px;
 }
 
 a {

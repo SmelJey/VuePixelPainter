@@ -241,6 +241,6 @@
         align-items: center;
         height: 50px;
         width: 279px;
-        border-radius: 0px 0px 10px 10px;
+        border-radius: 0 0 10px 10px;
     }
 }

@@ -4,6 +4,7 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
+                    <button class="button is-small is-rounded edtibutton has-background-grey-lighter" v-on:click="editPic"><i class="fas fa-pencil-alt"></i></button>
                     <p class="modal-card-title specialFont">ART</p>
                     <button class="delete" aria-label="close" v-on:click="closeModal"></button>
                 </header>
@@ -13,7 +14,7 @@
                 <footer v-if="showModal" class="modal-card-foot">
                     <span class="artAuthor" style="font-weight: bold;">Author: </span>
 					<span v-on:click="goToProfile()" class="likeAuthor" >
-						<p>{{ this.imageList[this.modalIndx].owner }}</p>
+						{{ getOwnerName }}
 					</span>
                     <span class="has-text-right mobile-text"> {{ this.imageList[this.modalIndx].likes }}</span>
                     <button class="likebutton" v-on:click="clickLike()">
@@ -46,14 +47,6 @@
 <script>
     import Post from './Post.vue'
     import Axios from 'axios'
-    const axios = Axios.create({
-        baseURL: 'http://localhost:8080/gallery',
-        timeout: 1000,
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'allow_origins' : 'http://localhost:8080/'
-        }
-    });
 
     export default {
         name: 'Cards',
@@ -82,9 +75,20 @@
                     this.requestImages();
                 }
                 return this.imageList
+            },
+            getOwnerName() {
+                if (this.imageList[this.modalIndx].owner.length > 16) {
+                    return this.imageList[this.modalIndx].owner.substr(0, 16) + '...';
+                }
+                return this.imageList[this.modalIndx].owner;
             }
         },
         methods: {
+            editPic() {
+                let canvas = document.getElementById("modalCanvas");
+                localStorage.setItem('painterData', canvas.toDataURL());
+                this.$router.push({ name: 'Painter' });
+            },
             goToProfile() {
                 if (this.$router.currentRoute.fullPath !== '/profile?id=' + this.imageList[this.modalIndx].owner)
                     this.$router.push('/profile?id=' + this.imageList[this.modalIndx].owner);
@@ -93,7 +97,7 @@
                 let operation = '/add?';
                 if (this.imageList[this.modalIndx].isLiked)
                     operation = '/remove?';
-                let req = 'http://localhost:8080/likes' + operation + 'art_id=' + this.imageList[this.modalIndx].id + '&token=' + this.$cookies.get('token');
+                let req = '/likes' + operation + 'art_id=' + this.imageList[this.modalIndx].id + '&token=' + this.$cookies.get('token');
                 Axios.post(req)
                     .then((response) => {
                         if (response.data['status'] === 'INVALID_TOKEN') {
@@ -136,8 +140,8 @@
             },
             updateImages() {
                 this.$emit('like');
-                let req = this.request +'&offset=0' + '&count=' + this.requestedNumberPictures;
-                axios.post(req)
+                let req = '/gallery' + this.request +'&offset=0' + '&count=' + this.requestedNumberPictures;
+                Axios.post(req)
                     .then((response) => {
                         if (response.data["status"] === "OK") {
                             let list = this.proceedResponse(response);
@@ -154,8 +158,8 @@
                 this.isRequired = true;
             },
             requestImages() {
-                let req = this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic;
-                axios.post(req)
+                let req = '/gallery' + this.request + '&offset=' + this.offset + '&count=' + this.numberOfPic;
+                Axios.post(req)
                     .then((response) => {
                         if (response.data["status"] === "OK") {
                             let list = this.proceedResponse(response);
@@ -236,6 +240,12 @@
     outline: none;
     margin-left: 5px;
 }
+
+.edtibutton {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
 
 @media screen and (max-width: 768px), print {
     .modal-card-head {
