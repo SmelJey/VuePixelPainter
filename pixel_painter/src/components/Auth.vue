@@ -32,8 +32,8 @@
 							</span>
 						</p>
 					</div>
-					<div class="field" v-if="haveError">
-						<p style="font-size: small; text-align: center;">
+					<div class="field">
+						<p style="font-size: small; text-align: center;" v-if="haveError">
 							Password length must be at least 6 symbols
 						</p>
 					</div>
