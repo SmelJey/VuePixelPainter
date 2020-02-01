@@ -86,8 +86,7 @@
         methods: {
             editPic() {
                 let canvas = document.getElementById("modalCanvas");
-                let ctx = canvas.getContext("2d");
-                localStorage.setItem('painterData', ctx.toDataURL());
+                localStorage.setItem('painterData', canvas.toDataURL());
                 this.$router.push({ name: 'Painter' });
             },
             goToProfile() {
