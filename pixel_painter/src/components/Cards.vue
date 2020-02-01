@@ -4,12 +4,11 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title specialFont">Art</p>
+                    <p class="modal-card-title specialFont">ART</p>
                     <button class="delete" aria-label="close" v-on:click="closeModal"></button>
                 </header>
                 <section class="modal-card-body is-paddingless" style="background-color: #f7efed;">
-                    <canvas id="modalCanvas" class="is-marginless" style="width: 100%; height: 100%;" width="16" height="16">
-                    </canvas>
+                    <canvas id="modalCanvas" class="is-marginless" style="width: 100%; height: 100%;" width="16" height="16"/>
                 </section>
                 <footer v-if="showModal" class="modal-card-foot">
                     <span class="artAuthor" style="font-weight: bold;">Author: </span>
@@ -18,8 +17,8 @@
 					</span>
                     <span class="has-text-right mobile-text"> {{ this.imageList[this.modalIndx].likes }}</span>
                     <button class="likebutton" v-on:click="clickLike()">
-                        <img v-if="!this.imageList[this.modalIndx].isLiked" src="../assets/icons/black_like.png" height="25px" width="25px"/>
-                        <img v-if="this.imageList[this.modalIndx].isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px"/>
+                        <img v-if="!this.imageList[this.modalIndx].isLiked" src="../assets/icons/black_like.png" height="35px" width="35px"/>
+                        <img v-if="this.imageList[this.modalIndx].isLiked" src="../assets/icons/fill_like.png" height="35px" width="35px"/>
                     </button>
                 </footer>
             </div>
@@ -183,6 +182,26 @@
 <style scoped>
 @import '../styles/Cards.css';
 
+
+
+.modal-card-head {
+    background-color: white;
+    height: 50px;
+}
+
+.modal-card-head p {
+    color: #1f1547;
+}
+
+.modal-card-foot {
+    background-color: white;
+    height: 60px;
+}
+
+.modal-card-foot span {
+    color: #1f1547;
+}
+
 .artAuthor {
     font-family: "PixelFont";
     font-size: 30px;
@@ -202,6 +221,12 @@
     width: 100%;
 }
 
+.likeAuthor p {
+    float: left;
+    margin-left: 30px;
+    margin-top: 8px;
+}
+
 .likebutton {
     padding: 0;
     border: none;
@@ -211,6 +236,16 @@
 }
 
 @media screen and (max-width: 768px), print {
+    .modal-card-head {
+        background-color: white;
+        height: 40px;
+    }
+
+    .modal-card-foot {
+        background-color: white;
+        height: 50px;
+    }
+
     .has-text-right.mobile-text {
         margin-bottom: 2px;
         margin-right: 3px;
@@ -226,6 +261,12 @@
         font-family: "Bookman";
         font-size: large;
         width: 100%;
-    }  
+    }
+
+    .likeAuthor p {
+    float: left;
+    margin-left: 30px;
+    margin-top: 3px;
+    }
 }
 </style>
