@@ -116,6 +116,10 @@
     transition: 0.7s;
 }
 
+.black {
+    display: none;
+}
+
 .card .user_m {
     display: none;
 }
@@ -155,9 +159,13 @@
       }
     
       .shadow {
-        display: block;
+        display: none;
         width: 200px;
       }
+
+      .card:hover .shadow {
+        display: none;
+    }
     
       .post .user {
         margin-top: 8px;
@@ -171,6 +179,10 @@
         object-fit: cover;
         border: 1px solid rgb(29, 28, 28);
         margin-top: 8px;
+    }
+
+    .black {
+        display: inline;
     }
     
     .min {
@@ -205,7 +217,7 @@
     .user_m .authorName {
         font-size: 15px;
         font-weight: 600;
-        width: 166px;
+        width: 156px;
     }
 
     .user_m .authorName p {
@@ -215,7 +227,7 @@
     
     .user_m .like {
         margin-top: 11px;
-        width: 60px;
+        width: 70px;
     }
     
     .card:hover .min {

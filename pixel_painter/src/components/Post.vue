@@ -12,6 +12,7 @@
                     <div class="like">
                         <a>
                             <img v-if="!isLiked" src="../assets/icons/like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                            <img class="black" v-if="!isLiked" src="../assets/icons/black_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
                             <img v-if="isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
                         </a>
                     </div>
