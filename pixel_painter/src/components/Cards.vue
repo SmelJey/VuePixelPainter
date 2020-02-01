@@ -9,7 +9,7 @@
                     <button class="delete" aria-label="close" v-on:click="closeModal"></button>
                 </header>
                 <section class="modal-card-body is-paddingless" style="background-color: #f7efed;">
-                    <canvas id="modalCanvas" class="is-marginless" style="width: 100%; height: 100%;" width="16" height="16">
+                    <canvas id="modalCanvas" class="is-marginless canvasLayout" width="16" height="16">
                     </canvas>
                 </section>
                 <footer v-if="showModal" class="modal-card-foot">
@@ -198,6 +198,11 @@
     font-weight: bold;
 }
 
+.canvasLayout {
+	width: 100%; 
+	height: 100%;
+}
+
 .likeAuthor {
     font-family: "Bookman";
     font-size: 30px;
@@ -235,6 +240,11 @@
         font-family: "Bookman";
         font-size: large;
         width: 100%;
-    }  
+    }
+
+    .canvasLayout {
+		width: 80%; 
+		height: 80%;
+	} 
 }
 </style>
