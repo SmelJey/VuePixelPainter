@@ -15,7 +15,7 @@ import "@fortawesome/fontawesome-free/css/all.css"
 import './../node_modules/bulma/css/bulma.css'
 
 
-Axios.defaults.baseURL = "http://5.63.159.185:8080";
+Axios.defaults.baseURL = "http://localhost:8080";
 
 Vue.use(VueCarousel);
 Vue.use(VueRouter);

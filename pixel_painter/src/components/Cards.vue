@@ -14,7 +14,7 @@
                 <footer v-if="showModal" class="modal-card-foot">
                     <span class="artAuthor" style="font-weight: bold;">Author: </span>
 					<span v-on:click="goToProfile()" class="likeAuthor" >
-						{{ this.imageList[this.modalIndx].owner }}
+						{{ getOwnerName }}
 					</span>
                     <span class="has-text-right mobile-text"> {{ this.imageList[this.modalIndx].likes }}</span>
                     <button class="likebutton" v-on:click="clickLike()">
@@ -75,6 +75,12 @@
                     this.requestImages();
                 }
                 return this.imageList
+            },
+            getOwnerName() {
+                if (this.imageList[this.modalIndx].owner.length > 16) {
+                    return this.imageList[this.modalIndx].owner.substr(0, 16) + '...';
+                }
+                return this.imageList[this.modalIndx].owner;
             }
         },
         methods: {
@@ -165,8 +171,7 @@
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
                         }
                     })
-                    .catch((error) => {
-                        console.log(error)
+                    .catch(() => {
                         this.isRequired = false;
                     });
                 this.isRequired = true;

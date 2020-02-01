@@ -295,18 +295,12 @@
 @import '../styles/Main.css';
 
 .button {
-    margin-top: 5px;
-    margin-bottom: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 5px 5px 10px;
 }
 
 .button.menu-button {
     font-size: large;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 5px;
 }
 
 @media only screen and (min-width: 512px) {
@@ -337,14 +331,11 @@
     .button.menu-button {
         font-family: "Bookman";
         font-size: small;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        margin-left: 5px;
-        margin-right: 5px;
+        margin: 5px;
     }
 
     #pixel-painter {
-    background-color: #f7efed;
+        background-color: #f7efed;
     }
 }
 </style>

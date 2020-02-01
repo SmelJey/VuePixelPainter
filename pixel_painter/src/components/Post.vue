@@ -7,7 +7,7 @@
                         <a><img class="ava" v-on:@click="goToProfile()" src="../assets/test/ava.jpg"/></a>
                     </div>
                     <div class="authorName">
-                        <a><p v-on:click="goToProfile()">{{ this.authorName }}</p></a>
+                        <a><p v-on:click="goToProfile()">{{ this.getName }}</p></a>
                     </div>
                     <div class="like">
                         <a>
@@ -23,7 +23,7 @@
                         <a><img class="ava" v-on:@click="goToProfile()" src="../assets/test/ava.jpg"/></a>
                     </div>
                     <div class="authorName">
-                        <a><p v-on:click="goToProfile()">{{ this.authorName }}</p></a>
+                        <a><p v-on:click="goToProfile()">{{ this.getName }}</p></a>
                     </div>
                     <div class="like">
                         <a>
@@ -49,6 +49,14 @@
             likes: Number,
             isLiked: Boolean,
             isReq: Boolean
+        },
+        computed: {
+            getName() {
+                if (this.authorName.length > 16) {
+                    return this.authorName.substr(0, 16) + '...';
+                }
+                return this.authorName;
+            }
         },
         methods: {
             clickLike() {

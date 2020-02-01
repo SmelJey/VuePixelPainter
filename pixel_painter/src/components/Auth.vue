@@ -175,7 +175,7 @@
 					let req = '/account/login?login=' + this.inputUsername
 							+ '&password=' + this.inputPassword;
 
-					Axios.get(req, { crossdomain: true })
+					Axios.get(req)
 						.then((response) => {
 							if (response.data["status"] === "OK"){
 								this.$cookies.set('token', response.data['token'], 3600);
@@ -226,19 +226,19 @@
 }
 
 #carousel {
-	padding-right: 0px;
-	padding-bottom: 0px;
-	margin-bottom: 0px;
+	padding-right: 0;
+	padding-bottom: 0;
+	margin-bottom: 0;
 }
 
 #logoback {
-	margin: 0px 0px 0px 0px;
+	margin: 0 0 0 0;
 	background-color: #fe6e4b;
-	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.45);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.45);
 }
 
 #register{
-	padding: 0px 0px 0px 0px;
+	padding: 0 0 0 0;
 	height: 100%;
 }
 </style>
