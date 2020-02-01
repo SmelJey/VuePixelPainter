@@ -4,6 +4,7 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
+                    <button class="button is-small is-rounded edtibutton has-background-grey-lighter" v-on:click="editPic"><i class="fas fa-pencil-alt"></i></button>
                     <p class="modal-card-title specialFont">ART</p>
                     <button class="delete" aria-label="close" v-on:click="closeModal"></button>
                 </header>
@@ -83,6 +84,12 @@
             }
         },
         methods: {
+            editPic() {
+                let canvas = document.getElementById("modalCanvas");
+                let ctx = canvas.getContext("2d");
+                localStorage.setItem('painterData', ctx.toDataURL());
+                this.$router.push({ name: 'Painter' });
+            },
             goToProfile() {
                 if (this.$router.currentRoute.fullPath !== '/profile?id=' + this.imageList[this.modalIndx].owner)
                     this.$router.push('/profile?id=' + this.imageList[this.modalIndx].owner);
@@ -234,6 +241,12 @@
     outline: none;
     margin-left: 5px;
 }
+
+.edtibutton {
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
 
 @media screen and (max-width: 768px), print {
     .modal-card-head {
