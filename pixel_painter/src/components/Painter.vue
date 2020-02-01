@@ -51,7 +51,7 @@
                 <div class="columns is-centered is-multiline">
                     <canvas class="box" style="margin: 0 auto; padding: 0;" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
                         v-on:touchstart="handleMouseDown" v-on:touchmove="handleMouseMove" v-on:touchend="handleMouseUp"
-                        v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove" onload="restorePainter()">
+                        v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove" v-on:mouseout="handleMouseUp" onload="restorePainter()">
                     </canvas>
                 </div>
 
