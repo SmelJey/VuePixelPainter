@@ -9,7 +9,7 @@
                     <button class="delete" aria-label="close" v-on:click="closeModal"></button>
                 </header>
                 <section class="modal-card-body is-paddingless" style="background-color: #f7efed;">
-                    <canvas id="modalCanvas" class="is-marginless" style="width: 100%; height: 100%;" width="16" height="16"/>
+                    <canvas id="modalCanvas" class="is-marginless artImage mobile-canvas" width="16" height="16"/>
                 </section>
                 <footer v-if="showModal" class="modal-card-foot">
                     <span class="artAuthor" style="font-weight: bold;">Author: </span>
@@ -246,6 +246,11 @@
     margin-right: 10px;
 }
 
+.artImage {
+	width: 100%;
+	height: 100%;
+}
+
 
 @media screen and (max-width: 768px), print {
     .modal-card-head {
@@ -264,11 +269,13 @@
         font-size: 18px;
         font-weight: bold;
     }
+
     .artAuthor {
         font-family: "PixelFont";
         font-size: large;
         margin-bottom: 3px;
     }
+
     .likeAuthor {
         font-family: "Bookman";
         font-size: large;
@@ -276,9 +283,14 @@
     }
 
     .likeAuthor p {
-    float: left;
-    margin-left: 30px;
-    margin-top: 3px;
+		float: left;
+		margin-left: 30px;
+		margin-top: 3px;
+    }
+
+	.artImage.mobile-canvas {
+		width: 80%;
+		height: 80%;
     }
 }
 </style>
