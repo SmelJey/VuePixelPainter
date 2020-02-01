@@ -5,7 +5,7 @@
             <div class="links">
                 <a><img @click="goToRedactor()" src="../assets/icons/pen_icon.png"></a>
                 <a><img @click="goToProfile()" src="../assets/icons/people_icon.png"></a>
-                <a><img src="../assets/icons/out_icon.png"></a>
+                <a><img v-if="isLogged" @click="logout()" src="../assets/icons/out_icon.png"></a>
             </div>
         </div>
     </nav>
@@ -13,26 +13,33 @@
 
 <script>
     import Axios from 'axios'
-    const axios = Axios.create({
-        baseURL: 'http://localhost:8080/account',
-        timeout: 1000,
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'allow_origins' : 'http://localhost:8080/'
-        }
-    });
 
     export default {
+        data: function() {
+            return {
+                isLogged: false
+            }
+        },
         methods: {
+            logout() {
+                let req = "/account/logout?token=" + this.$cookies.get('token');
+                Axios.post(req)
+                    .then(() => {
+                        this.isLogged = false;
+                        this.$cookies.set('login', null);
+                        this.$cookies.set('token', null);
+                    })
+            },
             goToProfile () {
                 if (this.$cookies.get('token') !== null) {
-                    let req = 'check_token?token=' + this.$cookies.get('token');
-                    axios.get(req)
+                    let req = '/account/check_token?token=' + this.$cookies.get('token');
+                    Axios.get(req)
                         .then((response) => {
                             if (response.data["status"] === "OK") {
                                 if (this.$router.currentRoute.fullPath.toLowerCase()
                                     !== '/profile?id=' + this.$cookies.get('login').toLowerCase()) {
-                                    this.$router.push('/profile?id=' + this.$cookies.get('login'))
+                                    this.$router.push('/profile?id=' + this.$cookies.get('login'));
+                                    this.$emit('redirect');
                                 }
                             } else {
                                 this.$router.push('/auth?cb=' + '/profile');
@@ -52,6 +59,13 @@
                     this.$router.push({name: 'Home'})
                 }
             },
+        },
+        mounted() {
+            let req = '/account/check_token?token=' + this.$cookies.get('token');
+            Axios.get(req)
+                .then((response) => {
+                    this.isLogged = (response.data['status'] === 'OK');
+                })
         }
     }
 </script>

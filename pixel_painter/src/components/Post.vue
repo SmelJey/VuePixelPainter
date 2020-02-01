@@ -7,11 +7,12 @@
                         <a><img class="ava" v-on:@click="goToProfile()" src="../assets/test/ava.jpg"/></a>
                     </div>
                     <div class="authorName">
-                        <a><p v-on:click="goToProfile()">{{ this.authorName }}</p></a>
+                        <a><p v-on:click="goToProfile()">{{ this.getName }}</p></a>
                     </div>
                     <div class="like">
                         <a>
                             <img v-if="!isLiked" src="../assets/icons/like.png" height="25px" width="25px" v-on:click="clickLike()"/>
+                            <img class="black" v-if="!isLiked" src="../assets/icons/black_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
                             <img v-if="isLiked" src="../assets/icons/fill_like.png" height="25px" width="25px" v-on:click="clickLike()"/>
                         </a>
                     </div>
@@ -23,7 +24,7 @@
                         <a><img class="ava" v-on:@click="goToProfile()" src="../assets/test/ava.jpg"/></a>
                     </div>
                     <div class="authorName">
-                        <a><p v-on:click="goToProfile()">{{ this.authorName }}</p></a>
+                        <a><p v-on:click="goToProfile()">{{ this.getName }}</p></a>
                     </div>
                     <div class="like">
                         <a>
@@ -39,14 +40,6 @@
 
 <script>
     import Axios from 'axios'
-    const axios = Axios.create({
-        baseURL: 'http://localhost:8080/likes',
-        timeout: 1000,
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'allow_origins' : 'http://localhost:8080/'
-        }
-    });
 
     export default {
         name: 'Post',
@@ -58,14 +51,22 @@
             isLiked: Boolean,
             isReq: Boolean
         },
+        computed: {
+            getName() {
+                if (this.authorName.length > 16) {
+                    return this.authorName.substr(0, 16) + '...';
+                }
+                return this.authorName;
+            }
+        },
         methods: {
             clickLike() {
-                let operation = '/add?';
+                let operation = '/likes/add?';
                 if (this.isLiked)
-                    operation = '/remove?';
+                    operation = '/likes/remove?';
 
                 let req = operation + 'art_id=' + this.artId + '&token=' + this.$cookies.get('token');
-                axios.post(req)
+                Axios.post(req)
                     .then((response) => {
                         if (response.data['status'] === 'INVALID_TOKEN') {
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);

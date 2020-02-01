@@ -104,14 +104,6 @@
 
 <script>
 	import Axios from 'axios'
-	const axios = Axios.create({
-		baseURL: 'http://localhost:8080/account',
-		timeout: 1000,
-		headers: {
-			'Access-Control-Allow-Origin': 'http://localhost:8080/',
-			'allow_origins' : 'http://localhost:8080/'
-		}
-	});
 
 	import { Carousel, Slide } from 'vue-carousel'
 	export default {
@@ -157,10 +149,10 @@
 					this.haveError = true;
 				} else {
 					this.haveError = false;
-					let req = '/register?login=' + this.inputUsername
+					let req = '/account/register?login=' + this.inputUsername
 							+ '&password=' + this.inputPassword
 							+ '&email=' + this.inputEmail;
-					axios.post(req)
+					Axios.post(req)
 						.then((response) => {
 							if (response.data["status"] === "OK") {
 								this.showModal = false;
@@ -185,10 +177,10 @@
 				} else {
 					this.haveError = false;
 
-					let req = '/login?login=' + this.inputUsername
+					let req = '/account/login?login=' + this.inputUsername
 							+ '&password=' + this.inputPassword;
 
-					axios.get(req)
+					Axios.get(req)
 						.then((response) => {
 							if (response.data["status"] === "OK"){
 								this.$cookies.set('token', response.data['token'], 3600);
@@ -248,19 +240,19 @@
 }
 
 #carousel {
-	padding-right: 0px;
-	padding-bottom: 0px;
-	margin-bottom: 0px;
+	padding-right: 0;
+	padding-bottom: 0;
+	margin-bottom: 0;
 }
 
 #logoback {
-	margin: 0px 0px 0px 0px;
+	margin: 0 0 0 0;
 	background-color: #fe6e4b;
-	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.45);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.45);
 }
 
 #register{
-	padding: 0px 0px 0px 0px;
+	padding: 0 0 0 0;
 	height: 100%;
 }
 </style>

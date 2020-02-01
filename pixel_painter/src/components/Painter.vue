@@ -51,7 +51,7 @@
                 <div class="columns is-centered is-multiline">
                     <canvas class="box" style="margin: 0 auto; padding: 0;" width="16" height="16" id="canvas" v-on:mousedown="handleMouseDown"
                         v-on:touchstart="handleMouseDown" v-on:touchmove="handleMouseMove" v-on:touchend="handleMouseUp"
-                        v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove" onload="restorePainter()">
+                        v-on:mouseup="handleMouseUp" v-on:mousemove="handleMouseMove" v-on:mouseout="handleMouseUp" onload="restorePainter()">
                     </canvas>
                 </div>
 
@@ -77,14 +77,6 @@
 <script>
     import Navbar from './Navbar.vue'
     import Axios from 'axios'
-    const axios = Axios.create({
-        baseURL: 'http://localhost:8080/gallery',
-        timeout: 1000,
-        headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:8080/',
-            'allow_origins' : 'http://localhost:8080/'
-        }
-    });
 
     export default {
         name: 'Painter',
@@ -207,10 +199,10 @@
             },
             publish: function() {
                 let c = document.getElementById('canvas');
-                let req = '/create?data=' + encodeURIComponent(c.toDataURL())
+                let req = '/gallery/create?data=' + encodeURIComponent(c.toDataURL())
                     + '&is_private=false'
                     + '&token=' + this.$cookies.get('token');
-                axios.post(req)
+                Axios.post(req)
                     .then((response) => {
                         if (response.data['status'] === 'INVALID_TOKEN'){
                             this.$router.push('/auth?cb=' + this.$router.currentRoute.fullPath);
@@ -304,24 +296,19 @@
 @import '../styles/Main.css';
 
 .button {
-    margin-top: 5px;
-    margin-bottom: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 5px 5px 10px;
 }
 
 .button.menu-button {
     font-size: large;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 5px;
     height: 70px;
 }
 
 .button.menu-button img {
     height: 50px;
     width: 50px;
+
 }
 
 @media only screen and (min-width: 512px) {
@@ -352,14 +339,11 @@
     .button.menu-button {
         font-family: "Bookman";
         font-size: small;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        margin-left: 5px;
-        margin-right: 5px;
+        margin: 5px;
     }
 
     #pixel-painter {
-    background-color: #f7efed;
+        background-color: #f7efed;
     }
 }
 </style>
