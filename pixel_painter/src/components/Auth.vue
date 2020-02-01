@@ -32,9 +32,9 @@
 							</span>
 						</p>
 					</div>
-					<div class="field">
+					<div class="field" v-if="haveError">
 						<p style="font-size: small; text-align: center;">
-							Password length must be more that 6 symbols
+							Password length must be at least 6 symbols
 						</p>
 					</div>
 					<p v-if="haveError && showModal" class="help is-danger">{{ errorMessage }}</p>
